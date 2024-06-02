@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="59.154" height="42.66" viewBox="0 0 59.154 42.66">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="Path_204" data-name="Path 204" d="M109.246,191.52H168.4v42.66H109.246Zm0,0" transform="translate(-109.246 -191.52)"/>
+    </clipPath>
+  </defs>
+  <g id="türkiye" transform="translate(-109.246 -191.52)">
+    <g id="Group_74" data-name="Group 74" transform="translate(109.246 191.52)" clip-path="url(#clip-path)">
+      <path id="Path_203" data-name="Path 203" d="M168.531,227.616a6.566,6.566,0,0,1-6.569,6.563H115.979a6.566,6.566,0,0,1-6.569-6.563V198.083a6.566,6.566,0,0,1,6.569-6.563h45.983a6.566,6.566,0,0,1,6.569,6.563Zm0,0" transform="translate(-109.394 -191.52)" fill="#e30917"/>
+    </g>
+    <path id="Path_205" data-name="Path 205" d="M233.969,306.116a9.845,9.845,0,1,1,5.76-17.822,12.066,12.066,0,1,0,0,15.955A9.8,9.8,0,0,1,233.969,306.116Zm6.426-9.467,4.007.922.361,4.09,2.115-3.521,4.007.92-2.7-3.1,2.114-3.523-3.782,1.608-2.7-3.1.361,4.092Zm0,0" transform="translate(-98.431 -83.422)" fill="#eee"/>
+  </g>
+</svg>
