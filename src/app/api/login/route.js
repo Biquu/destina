@@ -4,19 +4,24 @@ import { compare } from "bcryptjs";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
+// Schema for validating the incoming request
 const schema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
 
 export async function POST(req) {
+  // Connect to the database
   await connectToDB();
 
+  // Parse the incoming request body
   const { email, password } = await req.json();
 
+  // Validate the request body against the schema
   const { error } = schema.validate({ email, password });
 
   if (error) {
+    // If validation fails, return a response with an error message
     return NextResponse.json({
       success: false,
       message: error.details[0].message,
@@ -24,22 +29,27 @@ export async function POST(req) {
   }
 
   try {
+    // Check if the user with the provided email exists in the database
     const checkUser = await User.findOne({ email });
     if (!checkUser) {
+      // If the user does not exist, return an error response
       return NextResponse.json({
         success: false,
-        message: "Bu e-postaya sahip bir hesap bulunamadı!",
+        message: "No account found with this email!",
       });
     }
 
+    // Compare the provided password with the stored hashed password
     const checkPassword = await compare(password, checkUser.password);
     if (!checkPassword) {
+      // If the password does not match, return an error response
       return NextResponse.json({
         success: false,
-        message: "Hatalı şifre. Lütfen tekrar deneyiniz!",
+        message: "Incorrect password. Please try again!",
       });
     }
 
+    // Prepare the final data to be sent in the response
     const finalData = {
       user: {
         email: checkUser.email,
@@ -55,17 +65,19 @@ export async function POST(req) {
       },
     };
 
+    // Return a success response with the final data
     return NextResponse.json({
       success: true,
-      message: "Giriş Başarılı :)",
+      message: "Login successful :)",
       finalData,
     });
   } catch (error) {
+    // If an error occurs, log the error and return a generic error response
     console.log("err login", error);
 
     return NextResponse.json({
       success: false,
-      message: "Bir hata oluştu :(",
+      message: "An error occurred :(",
     });
   }
 }

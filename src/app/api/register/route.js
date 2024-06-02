@@ -4,6 +4,7 @@ import Joi from "joi";
 import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 
+// Schema for validating the incoming request
 const schema = Joi.object({
   username: Joi.string().required(),
   email: Joi.string().email().required(),
@@ -15,13 +16,17 @@ const schema = Joi.object({
 export const dynamic = "force-dynamic";
 
 export async function POST(req) {
+  // Connect to the database
   await connectToDB();
 
+  // Parse the incoming request body
   const { username, email, password, age, gender } = await req.json();
 
+  // Validate the request body against the schema
   const { error } = schema.validate({ username, email, password, age, gender });
 
   if (error) {
+    // If validation fails, log the error and return a response with an error message
     console.log(error);
     return NextResponse.json({
       success: false,
@@ -30,16 +35,20 @@ export async function POST(req) {
   }
 
   try {
+    // Check if the user with the provided email already exists in the database
     const isUserAlreadyExist = await User.findOne({ email });
 
     if (isUserAlreadyExist) {
+      // If the user already exists, return an error response
       return NextResponse.json({
         success: false,
-        message: "Bu kullanıcı mevcut",
+        message: "This user already exists",
       });
     } else {
+      // Hash the password
       const hashPassword = await hash(password, 12);
 
+      // Create a new user in the database
       const newlyCreatedUser = await User.create({
         username,
         email,
@@ -50,19 +59,21 @@ export async function POST(req) {
       });
 
       if (newlyCreatedUser) {
+        // If user creation is successful, return a success response
         return NextResponse.json({
           success: true,
-          message: "Kayıt Olma Başarılı",
+          message: "Registration successful",
         });
       }
     }
   } catch (error) {
+    // If an error occurs, log the error and return a generic error response
     console.log("err registration");
     console.log(error);
 
     return NextResponse.json({
       success: false,
-      message: "Bir hata oluştu :(",
+      message: "An error occurred :(",
     });
   }
 }
