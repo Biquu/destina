@@ -75,7 +75,7 @@ const LoginPage = () => {
                   </div>
                 </div>
               ))}
-              <button type="submit" className="w-full" >Login</button>
+              <button type="submit" className="w-full" >GİRİŞ YAP</button>
             </form>
             <div className="flex text-center mt-4">
               <hr className='w-full mt-3 border-blue' />
