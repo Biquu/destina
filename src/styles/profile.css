@@ -1,0 +1,172 @@
+body {
+    background-color: #F3FAF7; /* Light green background */
+    color: #333333;
+    font-family: 'TT Norms Pro', sans-serif;
+    margin: 0; /* Remove any default margin */
+    height: 100vh; /* Ensure the body takes the full height of the viewport */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px; /* Increased padding */
+    background-color: #F3FAF7; /* Match the background color with the body */
+    border-radius: 12px; /* Slightly larger border radius */
+    /* Remove shadow and scale */
+    box-shadow: none;
+    transform: scale(1); /* Restore original size */
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px; /* Increased margin */
+}
+
+.profile-header h1 {
+    margin-left: 12px; /* Increased margin */
+    font-size: 34px; /* Increased font size */
+    color: #249EA0;
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: row; /* Arrange children horizontally */
+    gap: 100px; /* Increased gap */
+    background-color: #F3FAF7; /* Match the background color with the body */
+    padding: 24px; /* Increased padding */
+    border-radius: 12px; /* Slightly larger border radius */
+    width: 100%; /* Full width */
+    max-width: 720px; /* Increased max-width */
+}
+
+.profile-left, .profile-right {
+    flex: 1; /* Equal width for left and right sections */
+}
+
+.profile-picture {
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.profile-picture img {
+    border-radius: 50%;
+    width: 100px; /* Restore original size */
+    height: 100px; /* Restore original size */
+    max-width: 100%;
+    max-height: auto;
+}
+
+.edit-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 21px; /* 70% of original size */
+    height: 21px; /* 70% of original size */
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Increased gap */
+}
+
+.profile-details h2 {
+    margin-bottom: 12px; /* Increased margin */
+    color: #249EA0;
+    text-align: center;
+    font-size: 24px; /* Increased font size */
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-item label {
+    font-weight: bold;
+    color: #249EA0;
+    font-size: 18px; /* Increased font size */
+}
+
+.detail-item input {
+    padding: 12px; /* Increased padding */
+    border: 1px solid #ccc;
+    border-radius: 6px; /* Slightly larger border radius */
+    font-size: 18px; /* Increased font size */
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: center; /* Center align buttons */
+    gap: 12px; /* Increased gap */
+    margin-top: 24px; /* Increased margin */
+}
+
+.btn {
+    padding: 12px 24px; /* Increased padding */
+    border: none;
+    border-radius: 6px; /* Slightly larger border radius */
+    font-size: 18px; /* Increased font size */
+    cursor: pointer;
+}
+
+.btn.cancel {
+    background-color: #ff5a5f;
+    color: #fff;
+}
+
+.btn.save {
+    background-color: #249EA0;
+    color: #fff;
+}
+
+.hello-world {
+    margin-top: 12px;
+    text-align: center;
+    color: #249EA0;
+    font-size: 18px;
+}
+
+.profile-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 24px; /* Increased margin */
+    width: 100%;
+    max-width: 720px; /* Increased max-width */
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 12px; /* Slightly larger border radius */
+    padding: 12px; /* Increased padding */
+    /* Remove shadow */
+    box-shadow: none;
+}
+
+.stat-item img {
+    width: 36px; /* Increased size */
+    height: 36px; /* Increased size */
+    margin-bottom: 6px; /* Increased margin */
+}
+
+.stat-item span {
+    font-size: 22px; /* Increased font size */
+    font-weight: bold;
+}
+
+.profile-description {
+    margin-top: 24px; /* Increased margin */
+    text-align: center;
+    color: #249EA0;
+    font-size: 18px; /* Increased font size */
+    max-width: 720px; /* Increased max-width */
+}
