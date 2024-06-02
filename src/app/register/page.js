@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Bear from '../../assets/mascots/Bear2.png';
 import Flag from '../../assets/logos/Turkiye.png';
 import Logo from '../../assets/logos/Logo.png';
+import Eye from '../../assets/components/eye.png';
 import '../styles/main.css';
 
 const RegisterPage = () => {
@@ -54,28 +55,46 @@ const RegisterPage = () => {
           <div className="bear-container">
             <Image src={Bear} alt="Bear" className='bear' />
           </div>
-          <div className="form-container">
-            <h1>Profilini Oluştur</h1>
+          <div className="form-container w-[350px]">
+            <h1 class="flex justify-center text-dark-blue text-xl font-normal mb-2" >Profilini Oluştur</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {registrationFormControls.map((control) => (
-                <div key={control.id}>
-                  <label className="block text-sm font-medium text-gray-700">{control.label}</label>
-                  <input
-                    type={control.type}
-                    name={control.id}
-                    value={formData[control.id]}
-                    onChange={handleChange}
-                    placeholder={control.placeholder}
-                    required
-                    className="mt-1 block w-full border border-gray-300 p-2 rounded-md text-black"
-                  />
-                </div>
-              ))}
-              <button type="submit">HESAP OLUŞTUR</button>
+              <div className='space-y-4 flex justify-center flex-col content-center'>
+                {registrationFormControls.map((control) => (
+                  <div key={control.id}>
+                    <div className="w-full relative content-center">
+                      {control.id === 'password' && (
+                        <Image className="absolute mt-4 w-5 right-0 mr-3" src={Eye} alt="Eye" />
+                      )}
+                    <input
+                      type={control.type}
+                      name={control.id}
+                      value={formData[control.id]}
+                      onChange={handleChange}
+                      placeholder={control.placeholder}
+                      required
+                      className="mt-1 bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
+                    />
+                    </div>
+                    {control.id === 'gender' && (
+                      <p className="w-full max-w-96 text-sm text-blue mt-4 text-center">
+                        Yaşını ve cinsiyetini sunman doğru Destina tecrübeni edinmeni sağlar. Daha fazla bilgi için lütfen <span className="font-bold">Gizlilik Politikası</span> bölümüne göz at.
+                      </p>
+                    )}
+
+                  </div>
+                ))}
+                <button className="w-full" type="submit">HESAP OLUŞTUR</button>
+              </div>
             </form>
-            <div className="mt-4 text-center">
-              <button type="button" onClick={handleLoginClick}>ZATEN HESABIM VAR</button>
+            <div className="flex text-center mt-4">
+              <hr className='w-full mt-3 border-blue' />
+              <span className='ml-3 mr-3 text-blue'>VEYA</span>
+              <hr className='w-full mt-3 border-blue' />
             </div>
+            <button className="mt-4  w-full" type="button" onClick={handleLoginClick}>ZATEN HESABIM VAR</button>
+            <p className="w-full max-w-96 text-sm text-blue mt-4 text-center">
+              Destina'da oturum açarak, <span className="font-bold">Koşullarımızı</span>  ve <span className="font-bold">Gizlilik Politikamızı</span>  kabul etmiş olursun.
+            </p>
           </div>
         </div>
       </div>
