@@ -51,7 +51,7 @@ const LoginPage = () => {
       </div>
       <div className="main-container">
         <div className="centered-container">
-          <div className="bear-container">
+          <div className="mascot-container">
             <Image src={Bear} alt="Bear" className='bear' />
           </div>
           <div className="form-container w-[350px]">

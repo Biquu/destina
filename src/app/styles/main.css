@@ -1,7 +1,4 @@
 .main-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     min-height: 100vh;
     background: #F3FAF7;
   }
@@ -14,10 +11,12 @@
   }
   
   .header {
+    padding-top: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 55%;
+    padding-bottom: 10px;
   }
   
   .logo-container {
@@ -46,7 +45,7 @@
     width: 300px;
   }
   
-  .bear-container {
+  .mascot-container {
     display: flex;
     align-items: center;
     justify-content: center;

@@ -19,6 +19,8 @@ const RegisterPage = () => {
     }, {})
   );
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -32,11 +34,20 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await register(formData);
-    console.log(response);
+    if (response.success) {
+      router.push('/register/profilePictures');
+    } else {
+      console.log('Registration failed:', response.message);
+    }
   };
 
   const handleLoginClick = () => {
     router.push('/login');
+  };
+
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -52,21 +63,21 @@ const RegisterPage = () => {
       </div>
       <div className="main-container">
         <div className="centered-container">
-          <div className="bear-container">
+          <div className="mascot-container">
             <Image src={Bear} alt="Bear" className='bear' />
           </div>
           <div className="form-container w-[350px]">
-            <h1 class="flex justify-center text-dark-blue text-xl font-normal mb-2" >Profilini Oluştur</h1>
+            <h1 className="flex justify-center text-dark-blue text-xl font-normal mb-2">Profilini Oluştur</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className='space-y-4 flex justify-center flex-col content-center'>
                 {registrationFormControls.map((control) => (
                   <div key={control.id}>
                     <div className="w-full relative content-center">
                       {control.id === 'password' && (
-                        <Image className="absolute mt-4 w-5 right-0 mr-3" src={Eye} alt="Eye" />
+                        <Image className="absolute mt-4 w-5 right-0 mr-3 cursor-pointer" src={Eye} alt="Eye" onClick={togglePasswordVisibility}/>
                       )}
                     <input
-                      type={control.type}
+                      type={control.id === 'password' && showPassword ? 'text' : control.type}
                       name={control.id}
                       value={formData[control.id]}
                       onChange={handleChange}
@@ -80,7 +91,6 @@ const RegisterPage = () => {
                         Yaşını ve cinsiyetini sunman doğru Destina tecrübeni edinmeni sağlar. Daha fazla bilgi için lütfen <span className="font-bold">Gizlilik Politikası</span> bölümüne göz at.
                       </p>
                     )}
-
                   </div>
                 ))}
                 <button className="w-full" type="submit">HESAP OLUŞTUR</button>
@@ -91,9 +101,9 @@ const RegisterPage = () => {
               <span className='ml-3 mr-3 text-blue'>VEYA</span>
               <hr className='w-full mt-3 border-blue' />
             </div>
-            <button className="mt-4  w-full" type="button" onClick={handleLoginClick}>ZATEN HESABIM VAR</button>
+            <button className="mt-4 w-full" type="button" onClick={handleLoginClick}>ZATEN HESABIM VAR</button>
             <p className="w-full max-w-96 text-sm text-blue mt-4 text-center">
-              Destina'da oturum açarak, <span className="font-bold">Koşullarımızı</span>  ve <span className="font-bold">Gizlilik Politikamızı</span>  kabul etmiş olursun.
+              Destina'da oturum açarak, <span className="font-bold">Koşullarımızı</span> ve <span className="font-bold">Gizlilik Politikamızı</span> kabul etmiş olursun.
             </p>
           </div>
         </div>
