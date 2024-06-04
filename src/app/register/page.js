@@ -45,7 +45,6 @@ const RegisterPage = () => {
     router.push('/login');
   };
 
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -72,20 +71,35 @@ const RegisterPage = () => {
               <div className='space-y-4 flex justify-center flex-col content-center'>
                 {registrationFormControls.map((control) => (
                   <div key={control.id}>
-                    <div className="w-full relative content-center">
-                      {control.id === 'password' && (
-                        <Image className="absolute mt-4 w-5 right-0 mr-3 cursor-pointer" src={Eye} alt="Eye" onClick={togglePasswordVisibility}/>
-                      )}
-                    <input
-                      type={control.id === 'password' && showPassword ? 'text' : control.type}
-                      name={control.id}
-                      value={formData[control.id]}
-                      onChange={handleChange}
-                      placeholder={control.placeholder}
-                      required
-                      className="mt-1 bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
-                    />
-                    </div>
+                    {control.componentType === 'input' && (
+                      <div className="w-full relative content-center">
+                        {control.id === 'password' && (
+                          <Image className="absolute mt-4 w-5 right-0 mr-3 cursor-pointer" src={Eye} alt="Eye" onClick={togglePasswordVisibility}/>
+                        )}
+                        <input
+                          type={control.id === 'password' && showPassword ? 'text' : control.type}
+                          name={control.id}
+                          value={formData[control.id]}
+                          onChange={handleChange}
+                          placeholder={control.placeholder}
+                          required
+                          className="mt-1 bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
+                        />
+                      </div>
+                    )}
+                    {control.componentType === 'select' && (
+                      <select
+                        name={control.id}
+                        value={formData[control.id]}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
+                      >
+                        {control.options.map(option => (
+                          <option key={option.value} value={option.value}>{option.label}</option>
+                        ))}
+                      </select>
+                    )}
                     {control.id === 'gender' && (
                       <p className="w-full max-w-96 text-sm text-blue mt-4 text-center">
                         Yaşını ve cinsiyetini sunman doğru Destina tecrübeni edinmeni sağlar. Daha fazla bilgi için lütfen <span className="font-bold">Gizlilik Politikası</span> bölümüne göz at.

@@ -8,10 +8,16 @@ export const registrationFormControls = [
   },
   {
     id: "gender",
-    type: "text",
+    type: "select",
     placeholder: "Cinsiyet",
     label: "Cinsiyet",
-    componentType: "input",
+    componentType: "select",
+    options: [
+      { value: "", label: "Cinsiyet Seçin" },
+      { value: "male", label: "Erkek" },
+      { value: "female", label: "Kadın" },
+      { value: "other", label: "Diğer" }
+    ]
   },
   {
     id: "username",
@@ -34,8 +40,8 @@ export const registrationFormControls = [
     label: "Parola",
     componentType: "input",
   },
-
 ];
+
 
 export const loginFormControls = [
   {
