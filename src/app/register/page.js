@@ -4,11 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { registrationFormControls } from '@/utils';
 import { register } from '@/services/register';
+import { imageAssets } from '@/utils';
 import Image from 'next/image';
-import Bear from '../../assets/mascots/Bear2.png';
-import Flag from '../../assets/logos/Turkiye.png';
-import Logo from '../../assets/logos/Logo.png';
-import Eye from '../../assets/components/eye.png';
 import '../styles/main.css';
 
 const RegisterPage = () => {
@@ -54,17 +51,17 @@ const RegisterPage = () => {
     <div className="main-page">
       <div className="header">
         <div className="logo-container">
-          <Image src={Logo} alt="Logo" />
+          <Image src={imageAssets.Logo} alt="Logo" />
         </div>
         <div className="flag-container">
           <div className='turkiye-text'>Türkiye</div>
-          <Image src={Flag} alt="Flag" />
+          <Image src={imageAssets.Flag} alt="Flag" />
         </div>
       </div>
-      <div className="main-container">
+      <div className="flex flex-col justify-center min-h-[90vh]">
         <div className="centered-container">
           <div className="mascot-container">
-            <Image src={Bear} alt="Bear" className='bear' />
+            <Image src={imageAssets.Bear2} alt="Bear" className='bear' />
           </div>
           <div className="form-container w-[350px]">
             <h1 className="flex justify-center text-dark-blue text-xl font-normal mb-2">Profilini Oluştur</h1>
@@ -74,7 +71,7 @@ const RegisterPage = () => {
                   <div key={control.id}>
                     <div className="w-full relative content-center">
                       {control.id === 'password' && (
-                        <Image className="absolute mt-4 w-5 right-0 mr-3 cursor-pointer" src={Eye} alt="Eye" onClick={togglePasswordVisibility}/>
+                        <Image className="absolute mt-4 w-5 right-0 mr-3 cursor-pointer" src={imageAssets.Eye} alt="Eye" onClick={togglePasswordVisibility}/>
                       )}
                     <input
                       type={control.id === 'password' && showPassword ? 'text' : control.type}

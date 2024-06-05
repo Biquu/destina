@@ -3,10 +3,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation'
+import { imageAssets } from '@/utils';
 import '../styles/main.css';
-import Bear from '../../assets/mascots/Bear.png';
-import Flag from '../../assets/logos/Turkiye.png';
-import Logo from '../../assets/logos/Logo.png';
 
 export default function MainPage() {
   const router = useRouter();
@@ -23,17 +21,17 @@ export default function MainPage() {
     <div className="main-page">
       <div className="header">
         <div className="logo-container">
-          <Image src={Logo} alt="Logo" />
+          <Image src={imageAssets.Logo} alt="Logo" />
         </div>
         <div className="flag-container">
           <div className='turkiye-text'>Türkiye</div>
-          <Image src={Flag} alt="Flag" />
+          <Image src={imageAssets.Flag} alt="Flag" />
         </div>
       </div>
-      <div className="main-container">
+      <div className="flex flex-col justify-center min-h-[90vh]">
         <div className="centered-container">
           <div className="mascot-container">
-            <Image src={Bear} alt="Bear" className='bear' />
+            <Image src={imageAssets.Bear} alt="Bear" className='bear' />
           </div>
           <div className="buttons">
             <button type="submit" onClick={handleRegisterClick}>BAŞLA</button>

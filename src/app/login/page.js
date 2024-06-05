@@ -2,12 +2,10 @@
 
 import { useState } from 'react';
 import { loginFormControls } from '@/utils';
+import { imageAssets } from '@/utils';
 import { login } from '@/services/login';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Bear from '../../assets/mascots/Bear3.png';
-import Flag from '../../assets/logos/Turkiye.png';
-import Logo from '../../assets/logos/Logo.png';
 import '../styles/main.css';
 
 const LoginPage = () => {
@@ -42,17 +40,17 @@ const LoginPage = () => {
     <div className="main-page">
       <div className="header">
         <div className="logo-container">
-          <Image src={Logo} alt="Logo" />
+          <Image src={imageAssets.Logo} alt="Logo" />
         </div>
         <div className="flag-container">
           <div className='turkiye-text'>Türkiye</div>
-          <Image src={Flag} alt="Flag" />
+          <Image src={imageAssets.Flag} alt="Flag" />
         </div>
       </div>
-      <div className="main-container">
+      <div className="flex flex-col justify-center min-h-[90vh]">
         <div className="centered-container">
           <div className="mascot-container">
-            <Image src={Bear} alt="Bear" className='bear' />
+            <Image src={imageAssets.Bear3} alt="Bear" className='bear' />
           </div>
           <div className="form-container w-[350px]">
             <h1 class="flex justify-center text-dark-blue text-xl font-normal mb-2">Oturum Aç</h1>
