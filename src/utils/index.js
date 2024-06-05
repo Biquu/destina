@@ -13,6 +13,11 @@ import Lion from '../assets/mascots/Lion.png';
 import Flag from '../assets/logos/Turkiye.png';
 import Logo from '../assets/logos/Logo.png';
 import Arrow from '../assets/components/arrow-down-orange.png'
+import ArrowOrange from '../assets/components/arrow-down-orange.png'
+import ArrowRightBlue from '../assets/components/arrow-right-blue.png'
+import ArrowBlue from '../assets/components/arrow-down-blue.png'
+import ArrowWhite from '../assets/components/arrow-down-white.png'
+import People from '../assets/components/people.png'
 import Pencil from '../assets/components/pencil.png'
 import Leave from '../assets/components/leave.png'
 import Copy from '../assets/components/copy.png'
@@ -21,7 +26,18 @@ import Bear3 from '../assets/mascots/Bear3.png';
 import Bear2 from '../assets/mascots/Bear2.png';
 import Bear from '../assets/mascots/Bear.png';
 import Eye from '../assets/components/eye.png';
-
+import Astronomi from '../assets/topics/Astronomi.png';
+import Bilim from '../assets/topics/Bilim.png';
+import Edebiyat from '../assets/topics/Edebiyat.png';
+import Felsefe from '../assets/topics/Felsefe.png';
+import Gastronomi from '../assets/topics/Gastronomi.png';
+import Psikoloji from '../assets/topics/Psikoloji.png';
+import Sanat from '../assets/topics/Sanat.png';
+import Seyahat from '../assets/topics/Seyahat.png';
+import Sosyoloji from '../assets/topics/Sosyoloji.png';
+import Spor from '../assets/topics/Spor.png';
+import Tarih from '../assets/topics/Tarih.png';
+import Teknoloji from '../assets/topics/Teknoloji.png';
 
 export const images = [
   { src: Female1, alt: "Female1" },
@@ -36,9 +52,29 @@ export const images = [
   { src: Male5, alt: "Male5" }
 ];
 
+export const topicImages = [
+  { src: Astronomi, alt: "Astronomi" },
+  { src: Bilim, alt: "Bilim" },
+  { src: Edebiyat, alt: "Edebiyat" },
+  { src: Felsefe, alt: "Felsefe" },
+  { src: Gastronomi, alt: "Gastronomi" },
+  { src: Psikoloji, alt: "Psikoloji" },
+  { src: Sanat, alt: "Sanat" },
+  { src: Seyahat, alt: "Seyahat" },
+  { src: Sosyoloji, alt: "Sosyoloji" },
+  { src: Spor, alt: "Spor" },
+  { src: Tarih, alt: "Tarih" },
+  { src: Teknoloji, alt: "Teknoloji" },
+];
+
+export const topicAssets = {
+  Astronomi, Bilim, Edebiyat, Felsefe, Gastronomi, Psikoloji,
+  Sanat, Seyahat, Sosyoloji, Spor, Tarih, Teknoloji
+};
+
 export const imageAssets = {
-  Copy, Leave, Pencil, Arrow, Logo, Flag, Lion, Coyote, Butterfly,
-  Bear, Bear2, Bear3, Eye
+  Copy, Leave, Pencil, ArrowOrange, Logo, Flag, Lion, Coyote, Butterfly,
+  Bear, Bear2, Bear3, Eye, ArrowRightBlue, Arrow, ArrowBlue, ArrowWhite, People
 };
 export const playerImages = {
   Female1, Female2, Female3, Female4, Female5,
