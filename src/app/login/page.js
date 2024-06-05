@@ -80,7 +80,7 @@ const LoginPage = () => {
               <span className='ml-3 mr-3 text-blue'>VEYA</span>
               <hr className='w-full mt-3 border-blue' />
             </div>
-            <button className="mt-4  w-full" type="button" onClick={handleRegisterClick}>ZATEN HESABIM VAR</button>
+            <button className="mt-4  w-full" type="button" onClick={handleRegisterClick}>HESAP OLUŞTUR</button>
           </div>
         </div>
       </div>

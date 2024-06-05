@@ -60,6 +60,9 @@ export default function homePage() {
     setShowPopupRoom(false); // Close the popup
   };
 
+  const handleStartGame = () => {
+    router.push('/game');
+  };
 
   const handleCopyRoomCode = () => {
     navigator.clipboard.writeText(roomInf[0].roomCode)
@@ -120,10 +123,10 @@ export default function homePage() {
                 </div>
               </div>
             }
-            <div className="flex text-center w-full">
-              <hr className='w-full mt-3 border-blue' />
+            <div className="flex flex-row justify-center w-full">
+              <hr className='mt-3 border-blue w-[135px]' />
               <span className='ml-3 mr-3 text-blue'>VEYA</span>
-              <hr className='w-full mt-3 border-blue' />
+              <hr className='mt-3 border-blue w-[135px]' />
             </div>
             <button type="button" onClick={handlePlayWithFriends}>ARKADAŞLARINLA OYNA</button>
             <p className="w-full max-w-96 text-sm text-blue text-center">
@@ -216,8 +219,8 @@ export default function homePage() {
                 <h3 className="flex justify-center items-center text-blue text-l font-normal">Kodu Arkadaşlarınla Paylaş</h3>
               </div>
             </div>
-            <div className="space-y-4 w-[100%]  flex justify-center">
-              <button className="w-full mt-10 w-[300px] justify-center" type="submit" onClick={() => { }}>OYNA</button>
+            <div className="space-y-4 w-[100%]  flex  justify-center">
+              <button className="mt-10 w-[300px] justify-center" type="submit" onClick={() => {handleStartGame(); }}>OYNA</button>
             </div>
           </div>
         </div>
