@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Header from '../../components/header'
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import '../styles/main.css';
 import { imageAssets } from '@/utils';
 import { playerImages } from '@/utils';
+import { GlobalContext } from '@/context';
 
 
 export default function homePage() {
@@ -15,6 +16,7 @@ export default function homePage() {
   const [showPopupRoom, setShowPopupRoom] = useState(false);
   const [showGames, setShowGames] = useState(false);
   const [selectedGame, setSelectedGame] = useState(1);
+  const { user } = useContext(GlobalContext);
 
 
   const roomInf = [
@@ -73,6 +75,7 @@ export default function homePage() {
         console.error('Failed to copy: ', err);
       });
   };
+  console.log(user);
 
   return (
     <div className="main-page">

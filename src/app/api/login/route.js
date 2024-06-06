@@ -3,6 +3,7 @@ import User from "@/models/user";
 import { compare } from "bcryptjs";
 import Joi from "joi";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 // Schema for validating the incoming request
 const schema = Joi.object({
@@ -16,6 +17,8 @@ export async function POST(req) {
 
   // Parse the incoming request body
   const { email, password } = await req.json();
+
+  
 
   // Validate the request body against the schema
   const { error } = schema.validate({ email, password });
@@ -49,8 +52,17 @@ export async function POST(req) {
       });
     }
 
+    const token = jwt.sign(
+      { email: checkUser.email, _id: checkUser._id },
+      "defaultSecretKey",
+      { expiresIn: "1D" }
+    );
+
+    console.log('Generated Token:', token);
+
     // Prepare the final data to be sent in the response
     const finalData = {
+      token,
       user: {
         email: checkUser.email,
         username: checkUser.username,

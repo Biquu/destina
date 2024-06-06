@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { registrationFormControls } from '@/utils';
 import { register } from '@/services/register';
 import { imageAssets } from '@/utils';
 import Image from 'next/image';
 import '../styles/main.css';
+import { GlobalContext } from '@/context';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState(
@@ -15,6 +16,7 @@ const RegisterPage = () => {
       return acc;
     }, {})
   );
+  const { isAuthenticated, setIsAuthenticated, user, setUser } = useContext(GlobalContext);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -46,6 +48,12 @@ const RegisterPage = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  useEffect(() => {
+    if(isAuthenticated) router.push('/home');
+  }, [isAuthenticated]);
+
+  
 
   return (
     <div className="main-page">
