@@ -9,6 +9,7 @@ import Male3 from '../assets/profilePictures/Male3.png';
 import Male4 from '../assets/profilePictures/Male4.png';
 import Male5 from '../assets/profilePictures/Male5.png';
 import Coyote from '../assets/mascots/Coyote.png';
+import CoyoteBlue from '../assets/mascots/Coyote2.png';
 import Lion from '../assets/mascots/Lion.png';
 import Flag from '../assets/logos/Turkiye.png';
 import Logo from '../assets/logos/Logo.png';
@@ -81,7 +82,7 @@ export const topicAssets = {
 export const imageAssets = {
   Copy, Leave, Pencil, ArrowOrange, Logo, Flag, Lion, Coyote, Butterfly, Voice,
   Bear, Bear2, Bear3, Eye, ArrowRightBlue, Arrow, ArrowBlue, ArrowWhite, 
-  People, Chat, Roulette, Colors, Microphone, Winner
+  People, Chat, Roulette, Colors, Microphone, Winner, CoyoteBlue
 };
 export const playerImages = {
   Female1, Female2, Female3, Female4, Female5,
