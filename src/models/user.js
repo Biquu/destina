@@ -31,8 +31,12 @@ const userSchema = new mongoose.Schema({
     elo: {
         type: Number, // Average rating given by the user
         required: true
+    },
+    gender: {
+        type: String,
+        enum: ['male', 'female', 'other'], // Limits gender to specified values
+        required: true // Ensures gender is provided
     }
-
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
