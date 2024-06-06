@@ -11,7 +11,7 @@ const CountdownTimer = ({ initialTime}) => {
         return () => clearInterval(interval);
     }, []);
 
-    const radius = 26;
+    const radius = 53;
     const circumference = 2 * Math.PI * radius;
     const offset = circumference - (timeLeft / initialTime) * circumference;
 
@@ -19,8 +19,8 @@ const CountdownTimer = ({ initialTime}) => {
     const seconds = timeLeft % 60;
 
     return (
-        <div className="flex flex-row items-center justify-center w-full z-[5]">
-            <svg className="w-14 h-14">
+        <div className="flex flex-row items-center justify-center w-full">
+            <svg className="w-28 h-28">
                 <circle
                     className="stroke-blue bg-background-white"
                     strokeWidth="94%"
@@ -48,8 +48,8 @@ const CountdownTimer = ({ initialTime}) => {
                     cy="50%"
                 />
             </svg>
-            <div className="ml-3 text-4xl font-medium text-dark-blue">
-                {minutes}:{seconds < 10 ? `0${seconds}` : seconds} 
+            <div className="ml-3 text-6xl font-medium text-dark-blue">
+                {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
             </div>
         </div>
     );

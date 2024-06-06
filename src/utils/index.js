@@ -21,6 +21,11 @@ import People from '../assets/components/people.png'
 import Pencil from '../assets/components/pencil.png'
 import Leave from '../assets/components/leave.png'
 import Copy from '../assets/components/copy.png'
+import Voice from '../assets/components/voice.png'
+import Chat from '../assets/components/Chat.png';
+import Roulette from '../assets/components/roulette.png';
+import Microphone from '../assets/components/microphone.png';
+import Colors from '../assets/components/colors.png';
 import Butterfly from '../assets/mascots/Butterfly.png';
 import Bear3 from '../assets/mascots/Bear3.png';
 import Bear2 from '../assets/mascots/Bear2.png';
@@ -73,8 +78,9 @@ export const topicAssets = {
 };
 
 export const imageAssets = {
-  Copy, Leave, Pencil, ArrowOrange, Logo, Flag, Lion, Coyote, Butterfly,
-  Bear, Bear2, Bear3, Eye, ArrowRightBlue, Arrow, ArrowBlue, ArrowWhite, People
+  Copy, Leave, Pencil, ArrowOrange, Logo, Flag, Lion, Coyote, Butterfly, Voice,
+  Bear, Bear2, Bear3, Eye, ArrowRightBlue, Arrow, ArrowBlue, ArrowWhite, 
+  People, Chat, Roulette, Colors, Microphone
 };
 export const playerImages = {
   Female1, Female2, Female3, Female4, Female5,
