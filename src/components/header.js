@@ -32,14 +32,14 @@ const Header = ({ playerInfo }) => {
   };
 
   return (
-    <div className="header">
+    <div className="header z-[5] relative">
       <div className="logo-container">
         <Image src={Logo} alt="Logo" />
       </div>
       <div className='relative'>
         <div className="flex justify-center items-center w-[100px] h-[21px] cursor-pointer " onClick={handleOpenProfileMenu}>
           <Image src={Arrow} alt="Arrow" className='w-5 mr-2' />
-          <div className='turkiye-text'>Profil</div>
+          <div className='text-xl font-bold text-blue'>Profil</div>
         </div>
         {showProfile &&
           <div className='fixed inset-0 flex justify-center items-center'>
