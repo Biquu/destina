@@ -64,8 +64,7 @@
   button {
     width: 340px;
     font-size: 18px;
-    font-weight: medium;
-    font-family: 'TT Norms Pro';
+    font-weight: bold;
     padding: 8px;
     border-radius: 45px;
     box-shadow: 0px 6px 6px #00000029;
@@ -96,8 +95,7 @@
   
   .turkiye-text {
     text-align: left;
-    font-family: 'TT Norms Pro';
-    font-weight: medium;
+    font-weight: bold;
     font-size: 22px;
     line-height: 22px;
     color: #249EA0;

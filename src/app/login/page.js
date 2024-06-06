@@ -1,25 +1,39 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { loginFormControls } from '@/utils';
-import { login } from '@/services/login';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Bear from '../../assets/mascots/Bear3.png';
-import Flag from '../../assets/logos/Turkiye.png';
-import Logo from '../../assets/logos/Logo.png';
-import '../styles/main.css';
+import { useState, useContext, useEffect } from "react";
+import { GlobalContext } from "@/context";
+import { loginFormControls } from "@/utils";
+import { imageAssets } from "@/utils";
+import { login } from "@/services/login";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import Image from "next/image";
+import "../styles/main.css";
+
+const initialFormData = {
+  email: "",
+  password: "", 
+};
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState(
-    loginFormControls.reduce((acc, control) => {
-      acc[control.id] = '';
-      return acc;
-    }, {})
-  );
+  
+  const [formData, setFormData] = useState(initialFormData);
+  const {isAuthenticated, setIsAuthenticated, user, setUser} =
+    useContext(GlobalContext);
 
   const router = useRouter();
 
+  console.log(user, isAuthenticated, formData);
+
+  function isValidForm() {
+    return formData &&
+      formData.email &&
+      formData.email.trim() !== "" &&
+      formData.password &&
+      formData.password.trim() !== ""
+      ? true
+      : false;
+  }
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -28,6 +42,22 @@ const LoginPage = () => {
     });
   };
 
+  async function handleLogin() {
+    const response = await login(formData);
+    console.log(response,"response");
+    if (response.success) {
+      console.log("Login successful");
+      setIsAuthenticated(true);
+      setUser(response?.finalData?.user);
+      Cookies.set("token", response?.finalData?.token);
+      localStorage.setItem("user", JSON.stringify(response.finalData.user));
+      router.push("/home");
+    }else {
+      console.log("Login failed");
+      setIsAuthenticated(false);
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await login(formData);
@@ -35,33 +65,43 @@ const LoginPage = () => {
   };
 
   const handleRegisterClick = () => {
-    router.push('/register');
+    router.push("/register");
   };
+
+  useEffect(() => { 
+    if (isAuthenticated) {
+      router.push("/home");
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="main-page">
       <div className="header">
         <div className="logo-container">
-          <Image src={Logo} alt="Logo" />
+          <Image src={imageAssets.Logo} alt="Logo" />
         </div>
         <div className="flag-container">
-          <div className='turkiye-text'>Türkiye</div>
-          <Image src={Flag} alt="Flag" />
+          <div className="turkiye-text">Türkiye</div>
+          <Image src={imageAssets.Flag} alt="Flag" />
         </div>
       </div>
-      <div className="main-container">
+      <div className="flex flex-col justify-center min-h-[90vh]">
         <div className="centered-container">
           <div className="mascot-container">
-            <Image src={Bear} alt="Bear" className='bear' />
+            <Image src={imageAssets.Bear3} alt="Bear" className="bear" />
           </div>
           <div className="form-container w-[350px]">
-            <h1 class="flex justify-center text-dark-blue text-xl font-normal mb-2">Oturum Aç</h1>
+            <h1 class="flex justify-center text-dark-blue text-xl font-normal mb-2">
+              Oturum Aç
+            </h1>
             <form onSubmit={handleSubmit} className="space-y-4">
               {loginFormControls.map((control) => (
                 <div key={control.id}>
                   <div className="w-full relative  content-center">
-                    {control.id === 'password' && (
-                      <span className="absolute w-7 content-center text-blue/50 text-sm mt-1 right-0 mr-[45px]">Parolamı Unuttum</span>
+                    {control.id === "password" && (
+                      <span className="absolute w-7 content-center text-blue/50 text-sm mt-1 right-0 mr-[45px]">
+                        Parolamı Unuttum
+                      </span>
                     )}
                     <input
                       type={control.type}
@@ -75,14 +115,22 @@ const LoginPage = () => {
                   </div>
                 </div>
               ))}
-              <button type="submit" className="w-full" >GİRİŞ YAP</button>
+              <button type="submit" className="w-full" onClick={handleLogin} disabled={!isValidForm}>
+                GİRİŞ YAP
+              </button>
             </form>
             <div className="flex text-center mt-4">
-              <hr className='w-full mt-3 border-blue' />
-              <span className='ml-3 mr-3 text-blue'>VEYA</span>
-              <hr className='w-full mt-3 border-blue' />
+              <hr className="w-full mt-3 border-blue" />
+              <span className="ml-3 mr-3 text-blue">VEYA</span>
+              <hr className="w-full mt-3 border-blue" />
             </div>
-            <button className="mt-4  w-full" type="button" onClick={handleRegisterClick}>ZATEN HESABIM VAR</button>
+            <button
+              className="mt-4  w-full"
+              type="button"
+              onClick={handleRegisterClick}
+            >
+              HESAP OLUŞTUR
+            </button>
           </div>
         </div>
       </div>

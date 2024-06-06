@@ -3,37 +3,14 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
-import Butterfly from '../../../assets/mascots/Butterfly.png';
-import Flag from '../../../assets/logos/Turkiye.png';
-import Logo from '../../../assets/logos/Logo.png';
-import Female1 from '../../../assets/profilePictures/Female1.png';
-import Female2 from '../../../assets/profilePictures/Female2.png';
-import Female3 from '../../../assets/profilePictures/Female3.png';
-import Female4 from '../../../assets/profilePictures/Female4.png';
-import Female5 from '../../../assets/profilePictures/Female5.png';
-import Male1 from '../../../assets/profilePictures/Male1.png';
-import Male2 from '../../../assets/profilePictures/Male2.png';
-import Male3 from '../../../assets/profilePictures/Male3.png';
-import Male4 from '../../../assets/profilePictures/Male4.png';
-import Male5 from '../../../assets/profilePictures/Male5.png';
+import { images } from '@/utils';
+import { imageAssets } from '@/utils';
+
 import '../../styles/main.css';
 
 const RegisterPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const router = useRouter();
-
-  const images = [
-    { src: Female1, alt: "Female1" },
-    { src: Female2, alt: "Female2" },
-    { src: Female3, alt: "Female3" },
-    { src: Female4, alt: "Female4" },
-    { src: Female5, alt: "Female5" },
-    { src: Male1, alt: "Male1" },
-    { src: Male2, alt: "Male2" },
-    { src: Male3, alt: "Male3" },
-    { src: Male4, alt: "Male4" },
-    { src: Male5, alt: "Male5" }
-  ];
 
   const handleImageClick = (index) => {
     setSelectedImage(index);
@@ -48,17 +25,17 @@ const RegisterPage = () => {
     <div className="main-page">
       <div className="header">
         <div className="logo-container">
-          <Image src={Logo} alt="Logo" />
+          <Image src={imageAssets.Logo} alt="Logo" />
         </div>
         <div className="flag-container">
           <div className='turkiye-text'>Türkiye</div>
-          <Image src={Flag} alt="Flag" />
+          <Image src={imageAssets.Flag} alt="Flag" />
         </div>
       </div>
-      <div className="main-container">
+      <div className="flex flex-col justify-center min-h-[90vh]">
         <div className="centered-container">
           <div className="mascot-container">
-            <Image src={Butterfly} alt="Butterfly" className='Butterfly ' />
+            <Image src={imageAssets.Butterfly} alt="Butterfly" className='Butterfly ' />
           </div>
           <div className="form-container w-[350px] ml-10">
             <h1 className="flex justify-center text-dark-blue text-xl font-normal ">Profil Fotoğrafını Seç</h1>

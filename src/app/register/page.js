@@ -1,15 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { registrationFormControls } from '@/utils';
 import { register } from '@/services/register';
+import { imageAssets } from '@/utils';
 import Image from 'next/image';
-import Bear from '../../assets/mascots/Bear2.png';
-import Flag from '../../assets/logos/Turkiye.png';
-import Logo from '../../assets/logos/Logo.png';
-import Eye from '../../assets/components/eye.png';
 import '../styles/main.css';
+import { GlobalContext } from '@/context';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState(
@@ -18,6 +16,7 @@ const RegisterPage = () => {
       return acc;
     }, {})
   );
+  const { isAuthenticated, setIsAuthenticated, user, setUser } = useContext(GlobalContext);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -49,21 +48,27 @@ const RegisterPage = () => {
     setShowPassword(!showPassword);
   };
 
+  useEffect(() => {
+    if(isAuthenticated) router.push('/home');
+  }, [isAuthenticated]);
+
+  
+
   return (
     <div className="main-page">
       <div className="header">
         <div className="logo-container">
-          <Image src={Logo} alt="Logo" />
+          <Image src={imageAssets.Logo} alt="Logo" />
         </div>
         <div className="flag-container">
           <div className='turkiye-text'>Türkiye</div>
-          <Image src={Flag} alt="Flag" />
+          <Image src={imageAssets.Flag} alt="Flag" />
         </div>
       </div>
-      <div className="main-container">
+      <div className="flex flex-col justify-center min-h-[90vh]">
         <div className="centered-container">
           <div className="mascot-container">
-            <Image src={Bear} alt="Bear" className='bear' />
+            <Image src={imageAssets.Bear2} alt="Bear" className='bear' />
           </div>
           <div className="form-container w-[350px]">
             <h1 className="flex justify-center text-dark-blue text-xl font-normal mb-2">Profilini Oluştur</h1>
@@ -71,35 +76,20 @@ const RegisterPage = () => {
               <div className='space-y-4 flex justify-center flex-col content-center'>
                 {registrationFormControls.map((control) => (
                   <div key={control.id}>
-                    {control.componentType === 'input' && (
-                      <div className="w-full relative content-center">
-                        {control.id === 'password' && (
-                          <Image className="absolute mt-4 w-5 right-0 mr-3 cursor-pointer" src={Eye} alt="Eye" onClick={togglePasswordVisibility}/>
-                        )}
-                        <input
-                          type={control.id === 'password' && showPassword ? 'text' : control.type}
-                          name={control.id}
-                          value={formData[control.id]}
-                          onChange={handleChange}
-                          placeholder={control.placeholder}
-                          required
-                          className="mt-1 bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
-                        />
-                      </div>
-                    )}
-                    {control.componentType === 'select' && (
-                      <select
-                        name={control.id}
-                        value={formData[control.id]}
-                        onChange={handleChange}
-                        required
-                        className="mt-1 bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
-                      >
-                        {control.options.map(option => (
-                          <option key={option.value} value={option.value}>{option.label}</option>
-                        ))}
-                      </select>
-                    )}
+                    <div className="w-full relative content-center">
+                      {control.id === 'password' && (
+                        <Image className="absolute mt-4 w-5 right-0 mr-3 cursor-pointer" src={Eye} alt="Eye" onClick={togglePasswordVisibility}/>
+                      )}
+                    <input
+                      type={control.id === 'password' && showPassword ? 'text' : control.type}
+                      name={control.id}
+                      value={formData[control.id]}
+                      onChange={handleChange}
+                      placeholder={control.placeholder}
+                      required
+                      className="mt-1 bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
+                    />
+                    </div>
                     {control.id === 'gender' && (
                       <p className="w-full max-w-96 text-sm text-blue mt-4 text-center">
                         Yaşını ve cinsiyetini sunman doğru Destina tecrübeni edinmeni sağlar. Daha fazla bilgi için lütfen <span className="font-bold">Gizlilik Politikası</span> bölümüne göz at.
