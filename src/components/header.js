@@ -32,7 +32,7 @@ const Header = ({ playerInfo }) => {
   };
 
   return (
-    <div className="header z-[5] relative">
+    <div className="header z-[8] relative">
       <div className="logo-container">
         <Image src={Logo} alt="Logo" />
       </div>

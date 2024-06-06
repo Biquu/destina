@@ -23,6 +23,7 @@ import Leave from '../assets/components/leave.png'
 import Copy from '../assets/components/copy.png'
 import Voice from '../assets/components/voice.png'
 import Chat from '../assets/components/Chat.png';
+import Winner from '../assets/components/winner.png';
 import Roulette from '../assets/components/roulette.png';
 import Microphone from '../assets/components/microphone.png';
 import Colors from '../assets/components/colors.png';
@@ -80,7 +81,7 @@ export const topicAssets = {
 export const imageAssets = {
   Copy, Leave, Pencil, ArrowOrange, Logo, Flag, Lion, Coyote, Butterfly, Voice,
   Bear, Bear2, Bear3, Eye, ArrowRightBlue, Arrow, ArrowBlue, ArrowWhite, 
-  People, Chat, Roulette, Colors, Microphone
+  People, Chat, Roulette, Colors, Microphone, Winner
 };
 export const playerImages = {
   Female1, Female2, Female3, Female4, Female5,

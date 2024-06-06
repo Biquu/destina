@@ -29,6 +29,12 @@ const PlayersList = ({ players }) => {
                                 <span className="text-blue text-l font-medium relative w-full">{player.name}
                                     <span className="text-blue text-l font-medium left-auto absolute inset-y-0 right-0">{player.score} p</span>
                                 </span>
+                                {index === 0 &&
+                                    <Image
+                                        src={imageAssets.Winner}
+                                        alt={"Winner"}
+                                        className="w-9 rounded-full ml-2 mb-12 absolute"
+                                    />}
                             </li>
                         ))}
                     </ul>
