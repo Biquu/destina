@@ -22,8 +22,8 @@ export default function homePage() {
   const [showRoulette, setShowRoulette] = useState(false);
   const [showResearch, setShowResearch] = useState(false);
   const [showWaitForTeller, setShowWaitForTeller] = useState(false);
-  const [showTellerChoosing, setTellerChoosing] = useState(true);
-  const [showGuess, setShowGuess] = useState(false);
+  const [showTellerChoosing, setTellerChoosing] = useState(false);
+  const [showGuess, setShowGuess] = useState(true);
   const [showTell, setShowTell] = useState(false);
 
 

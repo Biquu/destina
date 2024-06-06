@@ -41,7 +41,7 @@ const GuessBox = ({ playerInfo }) => {
                     <div className="flex-1"></div>
                     <div className="flex bg-white justify-center items-center h-[40px] rounded-full inset-x-0 bottom-0 shadow-md ">
                         <Image src={imageAssets.Chat} alt={"People"} className="mr-1 w-6 ml-4"/>
-                        <input className="w-[95%] ml-1 focus:outline-none focus:ring-0" type="text" placeholder="Bir metin giriniz." />
+                        <input className="w-[95%] ml-1 focus:outline-none focus:ring-0 text-dark-blue" type="text" placeholder="Bir metin giriniz." />
                         <Image src={imageAssets.ArrowBlue} alt={"ArrowBlue"} className="w-4 rotate-[270deg] mr-4"/>
                     </div>
                 </div>
