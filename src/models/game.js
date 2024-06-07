@@ -1,21 +1,11 @@
 import mongoose from "mongoose";
 
 const gameSchema = new mongoose.Schema({
-    // Title of the game
-    title: {
-        type: String,
-        required: true
-    },
     // Unique code for the game
     code: {
         type: String,
         required: true,
         unique: true
-    },
-    // Type of the game, e.g. "15min", "30min", "45min"
-    type: {
-        type: String,
-        required: true
     },
     // Date of the game, default to current date
     date: {

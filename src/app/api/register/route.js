@@ -11,12 +11,13 @@ const schema = Joi.object({
   password: Joi.string().min(6).required(),
   age: Joi.number().required(),
   gender: Joi.string().required(),
+  profileImage: Joi.string().required(),
 });
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req) {
-  // Connect to the database
+  // Connect to the databasea
   await connectToDB();
 
   // Parse the incoming request body
@@ -56,6 +57,7 @@ export async function POST(req) {
         age,
         gender,
         elo: 1000, // Default ELO score for new users
+        profileImage: " ", // Default profile image
       });
 
       if (newlyCreatedUser) {
