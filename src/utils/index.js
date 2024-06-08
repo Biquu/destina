@@ -20,6 +20,13 @@ import ArrowBlue from '../assets/components/arrow-down-blue.png'
 import ArrowWhite from '../assets/components/arrow-down-white.png'
 import People from '../assets/components/people.png'
 import Pencil from '../assets/components/pencil.png'
+import PencilDarkOrange from '../assets/components/pencilDarkOrange.png'
+import PencilDarkestOrange from '../assets/components/pencilDarkestOrange.png'
+import PencilOnly from '../assets/components/pencilOnly.png'
+import PencilOrange from '../assets/components/pencilOrange.png'
+import Compliment from '../assets/components/compliment.png'
+import Wins from '../assets/components/wins.png'
+import Elo from '../assets/components/elo.png'
 import Leave from '../assets/components/leave.png'
 import Copy from '../assets/components/copy.png'
 import Voice from '../assets/components/voice.png'
@@ -81,8 +88,10 @@ export const topicAssets = {
 
 export const imageAssets = {
   Copy, Leave, Pencil, ArrowOrange, Logo, Flag, Lion, Coyote, Butterfly, Voice,
-  Bear, Bear2, Bear3, Eye, ArrowRightBlue, Arrow, ArrowBlue, ArrowWhite, 
-  People, Chat, Roulette, Colors, Microphone, Winner, CoyoteBlue
+  Bear, Bear2, Bear3, Eye, ArrowRightBlue, Arrow, ArrowBlue, ArrowWhite,
+  People, Chat, Roulette, Colors, Microphone, Winner, CoyoteBlue, Elo, Wins, Compliment,
+  PencilOrange, PencilOnly, PencilDarkestOrange, PencilDarkOrange
+
 };
 export const playerImages = {
   Female1, Female2, Female3, Female4, Female5,
@@ -126,6 +135,37 @@ export const registrationFormControls = [
     componentType: "input",
   },
 
+];
+
+export const editFormControls = [
+  {
+    id: "username",
+    type: "text",
+    placeholder: "Rumuz",
+    label: "Kullanıcı Adı",
+    componentType: "input",
+  },
+  {
+    id: "email",
+    type: "email",
+    placeholder: "E-posta",
+    label: "E-posta",
+    componentType: "input",
+  },
+  {
+    id: "age",
+    type: "number",
+    placeholder: "Yaş",
+    label: "Yaş",
+    componentType: "input",
+  },
+  {
+    id: "gender",
+    type: "text",
+    placeholder: "Cinsiyet",
+    label: "Cinsiyet",
+    componentType: "input",
+  },
 ];
 
 export const loginFormControls = [

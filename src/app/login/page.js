@@ -68,7 +68,7 @@ const LoginPage = () => {
                       onChange={handleChange}
                       placeholder={control.placeholder}
                       required
-                      className="mt-1 bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
+                      className="mt-1 outline-darkest-blue  bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
                     />
                   </div>
                 </div>

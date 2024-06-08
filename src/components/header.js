@@ -22,9 +22,11 @@ const Header = ({ playerInfo }) => {
   };
 
   const handleProfileClick = () => {
+    router.push('/profile');
   };
 
   const handleOptionsClick = () => {
+    router.push('/settings');
   };
 
   const handleLogoutClick = () => {
