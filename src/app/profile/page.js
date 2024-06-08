@@ -107,7 +107,7 @@ export default function homePage() {
               ))}
               <div className='flex flex-row pt-6 block w-full'>
                 <button type="button" className="w-full mr-2" >İPTAL</button>
-                <button type="submit" className="w-full ml-2" >GİRİŞ YAP</button>
+                <button type="submit" className="w-full ml-2" >KAYDET</button>
               </div>
             </form>
             <p className="w-full w-full text-sm text-blue mt-4 text-center">
