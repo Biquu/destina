@@ -3,14 +3,20 @@ import Image from 'next/image';
 import { playerImages } from '@/utils';
 import { imageAssets } from '@/utils';
 
-const ChatBox = () => {
+const ChatBox = ({ onSendMessage, messages }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [message, setMessage] = useState('');
 
     const handleClick = () => {
         setIsCollapsed(!isCollapsed);
     };
 
-
+    const handleMessageSend = () => {
+        if (message.trim() !== '') {
+            onSendMessage(message);
+            setMessage('');
+        }
+    };
 
     return (
         <div className='w-full pr-[50px] h-[100%] flex flex-col relative'>
@@ -22,11 +28,33 @@ const ChatBox = () => {
                     <div className='flex flex-row justify-center items-center ml-4 mr-4 mt-2'>
                         <Image src={imageAssets.ArrowWhite} className="w-4" onClick={handleClick} />
                     </div>
-                    <div className="flex-1"></div>
+                    <div className="flex-1 overflow-y-auto">
+                        {messages.map((msg, index) => (
+                            <div key={index} className="p-2">
+                                <strong>{msg.user}</strong>: {msg.message}
+                            </div>
+                        ))}
+                    </div>
                     <div className="flex bg-white justify-center items-center h-[40px] rounded-full inset-x-0 bottom-0 shadow-md ">
                         <Image src={imageAssets.Chat} alt={"People"} className="mr-1 w-6 ml-4"/>
-                        <input className="w-[95%] ml-1 focus:outline-none focus:ring-0 text-dark-blue" type="text" placeholder="Bir metin giriniz." />
-                        <Image src={imageAssets.ArrowBlue} alt={"ArrowBlue"} className="w-4 rotate-[270deg] mr-4"/>
+                        <input
+                            className="w-[95%] ml-1 focus:outline-none focus:ring-0 text-dark-blue"
+                            type="text"
+                            placeholder="Bir metin giriniz."
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleMessageSend();
+                                }
+                            }}
+                        />
+                        <Image
+                            src={imageAssets.ArrowBlue}
+                            alt={"ArrowBlue"}
+                            className="w-4 rotate-[270deg] mr-4"
+                            onClick={handleMessageSend}
+                        />
                     </div>
                 </div>
             </div>

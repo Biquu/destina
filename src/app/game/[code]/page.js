@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useContext, useEffect } from "react";
-import Header from "@/components/header"; 
+import Header from "@/components/header";
 import CountdownTimer from "@/components/countdownTimer";
 import CountdownTimerBig from "@/components/countdownTimerBig";
 import Image from "next/image";
@@ -11,24 +11,24 @@ import { imageAssets } from "@/utils";
 import { topicAssets } from "@/utils";
 import PlayersList from "@/components/playerList";
 import GuessBox from "@/components/guessBox";
-import TopicBox from "@/components/topicBox";
 import ChatBox from "@/components/chatBox";
 import Roulette from "@/components/roulette";
 import { GlobalContext } from "@/context";
+import { socket } from "@/socket";
 
-const gamePage = ({params}) => {
+const gamePage = ({ params }) => {
   const router = useRouter();
   const { code } = params;
-  const [game, setGame] = useState(null); //[1]
+  const [game, setGame] = useState(null);
   const [showTopic, setShowTopic] = useState(false);
   const [showRoulette, setShowRoulette] = useState(false);
   const [showResearch, setShowResearch] = useState(false);
   const [showWaitForTeller, setShowWaitForTeller] = useState(false);
   const [showTellerChoosing, setTellerChoosing] = useState(false);
-  const [showGuess, setShowGuess] = useState(false);
+  const [showGuess, setShowGuess] = useState(true);
   const [showTell, setShowTell] = useState(false);
-
-  const { user } = useContext(GlobalContext);
+  const [messages, setMessages] = useState([]);
+  const { user, participants, setParticipants } = useContext(GlobalContext);
 
   useEffect(() => {
     if (code) {
@@ -40,13 +40,29 @@ const gamePage = ({params}) => {
         .catch((err) => {
           console.error(err);
         });
+
+      socket.emit("joinRoom", code);
+
+      socket.on("chatMessage", (message) => {
+        console.log("Message received:", message);
+        setMessages((prevMessages) => [...prevMessages, message]);
+      });
+
+      return () => {
+        socket.emit("leaveRoom", code);
+        socket.off("chatMessage");
+      };
     }
   }, [code]);
 
+  const handleSendMessage = (message) => {
+    console.log("Message sent:", message);
+    socket.emit("chatMessage", code, {user: user.username, message});
+  };
+    
+
   const playerInfo = [{ name: user?.username, profilePicture: "Male2" }];
-
   const gameTopic = [{ topic: "Felsefe" }];
-
   const handleLeaveClick = () => {};
 
   const players = [
@@ -64,6 +80,7 @@ const gamePage = ({params}) => {
     { src: topicAssets.Seyahat, label: "Seyahat" },
     { src: topicAssets.Sosyoloji, label: "Sosyoloji" },
   ];
+
   return (
     <div className="main-page">
       {showTopic && (
@@ -79,7 +96,10 @@ const gamePage = ({params}) => {
                 <TopicBox topics={topics} />
               </div>
               <div className="w-1/5 ">
-                <ChatBox />
+                <ChatBox
+                  onSendMessage={handleSendMessage}
+                  messages={messages}
+                />
               </div>
             </div>
           </div>
@@ -98,7 +118,10 @@ const gamePage = ({params}) => {
                 <Roulette gameTopic={gameTopic} />
               </div>
               <div className="w-1/5 ">
-                <ChatBox />
+                <ChatBox
+                  onSendMessage={handleSendMessage}
+                  messages={messages}
+                />
               </div>
             </div>
           </div>
@@ -139,7 +162,10 @@ const gamePage = ({params}) => {
                 </div>
               </div>
               <div className="w-1/5 ">
-                <ChatBox />
+                <ChatBox
+                  onSendMessage={handleSendMessage}
+                  messages={messages}
+                />
               </div>
             </div>
           </div>
@@ -160,10 +186,16 @@ const gamePage = ({params}) => {
                     Arkadaşın Ne Anlatacağına Karar Veriyor...
                   </h2>
                 </div>
-                <GuessBox playerInfo={playerInfo} />
+                <GuessBox
+                  playerInfo={playerInfo}
+                  onSendMessage={handleSendMessage}
+                />
               </div>
               <div className="w-1/5 ">
-                <ChatBox />
+                <ChatBox
+                  onSendMessage={handleSendMessage}
+                  messages={messages}
+                />
               </div>
             </div>
           </div>
@@ -197,10 +229,16 @@ const gamePage = ({params}) => {
                   </div>
                   <div className="absolute inset-0 bg-background-white bg-opacity-55 z-[4]"></div>
                 </div>
-                <GuessBox playerInfo={playerInfo} />
+                <GuessBox
+                  playerInfo={playerInfo}
+                  onSendMessage={handleSendMessage}
+                />
               </div>
               <div className="w-1/5 ">
-                <ChatBox />
+                <ChatBox
+                  onSendMessage={handleSendMessage}
+                  messages={messages}
+                />
               </div>
             </div>
           </div>
@@ -216,10 +254,16 @@ const gamePage = ({params}) => {
               </div>
               <div className="w-3/5 flex flex-col">
                 <CountdownTimer initialTime={105} />
-                <GuessBox playerInfo={playerInfo} />
+                <GuessBox
+                  playerInfo={playerInfo}
+                  onSendMessage={handleSendMessage}
+                />
               </div>
               <div className="w-1/5 ">
-                <ChatBox />
+                <ChatBox
+                  onSendMessage={handleSendMessage}
+                  messages={messages}
+                />
               </div>
             </div>
           </div>
@@ -235,10 +279,16 @@ const gamePage = ({params}) => {
               </div>
               <div className="w-3/5 flex flex-col">
                 <CountdownTimer initialTime={105} />
-                <GuessBox playerInfo={playerInfo} />
+                <GuessBox
+                  playerInfo={playerInfo}
+                  onSendMessage={handleSendMessage}
+                />
               </div>
               <div className="w-1/5 ">
-                <ChatBox />
+                <ChatBox
+                  onSendMessage={handleSendMessage}
+                  messages={messages}
+                />
               </div>
             </div>
           </div>
