@@ -7,7 +7,7 @@ export const GlobalContext = createContext(null);
 
 export default function GlobalState({ children }) {
   const [user, setUser] = useState(null);
-  const [users, setUsers] = useState([]);
+  const [participants, setParticipants] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -26,8 +26,8 @@ export default function GlobalState({ children }) {
       value={{
         user,
         setUser,
-        users,
-        setUsers,
+        participants,
+        setParticipants,
         isAuthenticated,
         setIsAuthenticated,
       }}

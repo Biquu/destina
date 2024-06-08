@@ -9,6 +9,7 @@ import { NextResponse } from "next/server";
 
 const schema = Joi.object({
     userId: Joi.string().required(),
+    username: Joi.string().required(),
     duration: Joi.number().required().integer().min(1).required(),
     capacity: Joi.number().required().integer().min(1).required(),
     code: Joi.string().required(),
@@ -20,10 +21,10 @@ export async function POST(req){
     await connectToDB();
 
     // Parse the incoming request body
-    const {userId, duration, capacity, code} = await req.json();
+    const {userId, username, duration, capacity, code} = await req.json();
 
     // Validate the request body against the schema
-    const {error} = schema.validate({userId, duration, capacity, code});
+    const {error} = schema.validate({userId, username, duration, capacity, code});
 
     if(error){
         return NextResponse.json({
@@ -35,10 +36,11 @@ export async function POST(req){
     try{
         const game = new Game({
             userId,
+            username,
             duration,
             capacity,
             code,
-            participants: [{participant: userId, sessionScore: 0}],
+            participants: [{participant: userId, username: username, sessionScore: 0}],
         });
 
         await game.save();

@@ -25,7 +25,7 @@ const gamePage = ({params}) => {
   const [showResearch, setShowResearch] = useState(false);
   const [showWaitForTeller, setShowWaitForTeller] = useState(false);
   const [showTellerChoosing, setTellerChoosing] = useState(false);
-  const [showGuess, setShowGuess] = useState(true);
+  const [showGuess, setShowGuess] = useState(false);
   const [showTell, setShowTell] = useState(false);
 
   const { user } = useContext(GlobalContext);

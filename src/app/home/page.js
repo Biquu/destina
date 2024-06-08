@@ -21,7 +21,7 @@ export default function homePage() {
   const [gameCode, setGameCode] = useState(" ");
   const [roomCode, setRoomCode] = useState(" ");
 
-  const { user } = useContext(GlobalContext);
+  const { user, participants, setParticipants } = useContext(GlobalContext);
 
   
 
@@ -84,6 +84,7 @@ export default function homePage() {
 
     let joinData = {
       userId: user?._id,
+      username: user?.username,
       code: roomCode,
     };
 
@@ -91,8 +92,10 @@ export default function homePage() {
       const data = await joinGame(joinData);
       console.log(joinData);
       console.log(data);
+      console.log(data.data.participants);
       if (data.success) {
         console.log("Joined game successfully");
+        setParticipants(data.data.participants);
         handleJoinRoom();
       } else {
         console.log("Failed to join game");
@@ -103,11 +106,14 @@ export default function homePage() {
 
   };
   
+  
 
   const handleCreateRoom = async () => {
     
+    
     let gameData = {
       userId: user?._id,
+      username: user?.username,
       code: nanoid(6),
     };
     switch (selectedGame) {
@@ -129,11 +135,13 @@ export default function homePage() {
     setGameCode(gameData.code);
 
     try {
-      const data = await createGame(gameData);
-      console.log(gameData);
-      console.log(data);
+      const data = await createGame(gameData);     
+     
+      console.log(data.data.participants[0].name);
       if (data.success) {
         console.log("Game created successfully");
+        setParticipants(data.data.participants);
+        console.log(participants)
         handleClosePopup();
       } else {
         console.log("Failed to create game");
@@ -381,14 +389,14 @@ export default function homePage() {
                 <h3 className="flex justify-center items-center text-blue text-xl font-medium mb-2">
                   Oyuncular
                 </h3>
-                {players.map((player, index) => (
+                {participants.map((player, index) => (
                   <div key={index} className="flex items-center mb-2">
                     <Image
-                      src={playerImages[player.profilePicture]}
-                      alt={player.name}
+                      src={playerImages["Male1"]}
+                      alt={playerImages[player.username]}
                       className="w-10 h-10 rounded-full mr-2"
                     />
-                    <span className="text-blue text-lg">{player.name}</span>
+                    <span className="text-blue text-lg">{player.username}</span>
                   </div>
                 ))}
               </div>

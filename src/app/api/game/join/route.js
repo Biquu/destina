@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 // Schema for validating the incoming request
 const schema = Joi.object({
     userId: Joi.string().required(),
+    username: Joi.string().required(),
     code: Joi.string().required(),
 });
 
@@ -13,10 +14,10 @@ export async function POST(req) {
     await connectToDB();
 
     // Parse the incoming request body
-    const { userId, code } = await req.json();
+    const { userId, username, code } = await req.json();
 
     // Validate the request body against the schema
-    const { error } = schema.validate({ userId, code });
+    const { error } = schema.validate({ userId, username, code });
 
     if (error) {
         return NextResponse.json({
@@ -49,7 +50,7 @@ export async function POST(req) {
             });
         }
 
-        game.participants.push({ participant: userId, sessionScore: 0 });
+        game.participants.push({ participant: userId, username: username,sessionScore: 0 });
         await game.save();
 
         return NextResponse.json({
