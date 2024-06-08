@@ -87,10 +87,10 @@ export default function homePage() {
                   }
                   <div className="w-full relative  content-center">
                     <div className={`w-9 h-9 border border-dark-blue absolute right-3 bottom-[-22px] rounded-full flex justify-center items-center
-                      ${control.id === 'age' && "bg-orange"}
-                      ${control.id === 'gender' && "bg-dark-orange"}
-                      ${control.id === 'username' && "bg-dark-orange"}
-                      ${control.id === 'email' && "bg-darkest-orange"}`}>
+                      ${control.id === 'username' && "bg-orange"}
+                      ${control.id === 'email' && "bg-dark-orange"}
+                      ${control.id === 'age' && "bg-dark-orange"}
+                      ${control.id === 'gender' && "bg-darkest-orange"}`}>
                       <Image src={imageAssets.PencilOnly} alt="Pencil" className='w-[60%]' />
                     </div>
                     <input
