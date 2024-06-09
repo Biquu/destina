@@ -7,7 +7,7 @@ import Arrow from '../assets/components/arrow-down-orange.png';
 import Pencil from '../assets/components/pencil.png';
 import Leave from '../assets/components/leave.png';
 import Logo from '../assets/logos/Logo.png';
-import { playerImages } from '@/utils';
+import { images } from '@/utils';
 import { GlobalContext } from '@/context';
 import { func } from 'joi';
 import Cookies from 'js-cookie';
@@ -25,6 +25,7 @@ const Header = ({ playerInfo }) => {
     router.push('/');
   }
 
+  console.log(user);
 
   const handleOpenProfileMenu = () => {
     setShowProfile(true); // Show the popup when the button is clicked
@@ -60,7 +61,7 @@ const Header = ({ playerInfo }) => {
             </div>
             <div className="bg-white fixed flex  flex-col p-8 rounded-[90px] shadow-lg w-[330px] h-[300px] absolute top-[50px] right-[10%] items-center">
               <div className='relative fixed flex justify-center cursor-pointer' onClick={handleProfileClick}>
-                <Image src={playerImages[playerInfo[0].profilePicture]} alt={playerInfo[0].name} className='w-[162px]' />
+                <Image src={images[user?.profileImage]?.src} alt={images[user?.profileImage]?.alt} className='w-[162px]' />
                 <Image src={Pencil} alt="Pencil" className='absolute w-[44px] right-[3px] top-[120px]' />
               </div>
               <h1 className="flex justify-center text-dark-blue text-xl font-medium mb-2 mt-5 cursor-pointer" onClick={handleOptionsClick}>Ayarlar</h1>
