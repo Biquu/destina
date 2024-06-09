@@ -35,15 +35,17 @@ const Header = ({ playerInfo }) => {
   };
 
   const handleProfileClick = () => {
+    router.push('/profile');
   };
 
   const handleOptionsClick = () => {
+    router.push('/settings');
   };
 
   
 
   return (
-    <div className="header z-[5] relative">
+    <div className="header z-[8] relative">
       <div className="logo-container">
         <Image src={Logo} alt="Logo" />
       </div>
