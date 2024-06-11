@@ -4,7 +4,7 @@ import { playerImages } from '@/utils';
 import { imageAssets } from '@/utils';
 
 
-const rouletteBox = ({ gameTopic }) => {
+const rouletteBox = ({finalTopic }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     const handleClick = () => {
@@ -25,7 +25,7 @@ const rouletteBox = ({ gameTopic }) => {
             </div >
             <div className="bg-darkest-orange absolute rounded-full flex justify-center items-center bottom-28 animate-appear-slow  ">
                 <h2 className="font-bold flex justify-center items-center text-background-white text-4xl font-medium pl-8 pr-8 p-2">
-                    {gameTopic[0].topic}
+                    {finalTopic}
                 </h2>
             </div>
             <div className='flex justify-center items-center absolute cursor-pointer mt-4 bottom-20' onClick={handleLeaveClick}>

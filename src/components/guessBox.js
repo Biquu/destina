@@ -3,18 +3,18 @@ import Image from 'next/image';
 import { playerImages } from '@/utils';
 import { imageAssets } from '@/utils';
 
-const GuessBox = ({ playerInfo, onSendMessage }) => {
+const GuessBox = ({ playerInfo, onSendGuess, guesses }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [message, setMessage] = useState('');
+    const [guess, setGuess] = useState('');
 
     const handleClick = () => {
         setIsCollapsed(!isCollapsed);
     };
 
-    const handleMessageSend = () => {
-        if (message.trim() !== '') {
-            onSendMessage(message);
-            setMessage('');
+    const handleGuessSend = () => {
+        if (guess.trim() !== '') {
+            onSendGuess(guess);
+            setGuess('');
         }
     };
 
@@ -33,7 +33,7 @@ const GuessBox = ({ playerInfo, onSendMessage }) => {
                 </div>
                 <div className="flex flex-col bg-orange/[.33] rounded-[20px] flex-1 relative ">
                     <div className='flex flex-row justify-center items-center ml-4 mr-4 mt-2'>
-                        <Image src={imageAssets.ArrowWhite} className="w-4" onClick={handleClick}/>
+                        <Image src={imageAssets.ArrowWhite} className="w-4" onClick={handleClick} />
                     </div>
                     <div className='flex flex-row items-center ml-4 mr-4 relative'>
                         <Image src={playerImages[playerInfo[0].profilePicture]} width={40} height={40} className="rounded-full mr-2" />
@@ -44,27 +44,26 @@ const GuessBox = ({ playerInfo, onSendMessage }) => {
                         </div>
                     </div>
 
-                    <div className="flex-1"></div>
+                    <div className="flex-1 overflow-y-auto">
+                        {guesses.map((msg, index) => (
+                            <div key={index} className="pl-2 text-blue">
+                                <strong>{msg.user}</strong>: {msg.message}
+                            </div>
+                        ))}
+                    </div>
                     <div className="flex bg-white justify-center items-center h-[40px] rounded-full inset-x-0 bottom-0 shadow-md ">
                         <Image src={imageAssets.Chat} alt={"People"} className="mr-1 w-6 ml-4"/>
-                        <input
-                            className="w-[95%] ml-1 focus:outline-none focus:ring-0 text-dark-blue"
-                            type="text"
-                            placeholder="Bir metin giriniz."
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
+                        <input 
+                            className="w-[95%] ml-1 focus:outline-none focus:ring-0 text-dark-blue" 
+                            type="text" 
+                            placeholder="Bir metin giriniz." 
+                            value={guess}
+                            onChange={(e) => setGuess(e.target.value)}
                             onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                    handleMessageSend();
-                                }
+                                if (e.key === 'Enter') handleGuessSend();
                             }}
                         />
-                        <Image
-                            src={imageAssets.ArrowBlue}
-                            alt={"ArrowBlue"}
-                            className="w-4 rotate-[270deg] mr-4"
-                            onClick={handleMessageSend}
-                        />
+                        <Image src={imageAssets.ArrowBlue} alt={"ArrowBlue"} className="w-4 rotate-[270deg] mr-4" onClick={handleGuessSend}/>
                     </div>
                 </div>
             </div>

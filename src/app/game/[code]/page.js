@@ -13,6 +13,7 @@ import PlayersList from "@/components/playerList";
 import GuessBox from "@/components/guessBox";
 import ChatBox from "@/components/chatBox";
 import Roulette from "@/components/roulette";
+import TopicBox from "@/components/topicBox";
 import { GlobalContext } from "@/context";
 import { socket } from "@/socket";
 
@@ -20,15 +21,29 @@ const gamePage = ({ params }) => {
   const router = useRouter();
   const { code } = params;
   const [game, setGame] = useState(null);
-  const [showTopic, setShowTopic] = useState(false);
+  const [showTopic, setShowTopic] = useState(true);
   const [showRoulette, setShowRoulette] = useState(false);
   const [showResearch, setShowResearch] = useState(false);
   const [showWaitForTeller, setShowWaitForTeller] = useState(false);
   const [showTellerChoosing, setTellerChoosing] = useState(false);
-  const [showGuess, setShowGuess] = useState(true);
+  const [showGuess, setShowGuess] = useState(false);
   const [showTell, setShowTell] = useState(false);
+
   const [messages, setMessages] = useState([]);
+  const [guesses, setGuesses] = useState([]);
+  const [selectedTopics, setSelectedTopics] = useState([]);
+  const [allTopics, setAllTopics] = useState([]);
+  const [finalTopic, setFinalTopic] = useState(null);
+
   const { user, participants, setParticipants } = useContext(GlobalContext);
+
+  // Load messages from session storage
+  useEffect(() => {
+    const storedMessages = localStorage.getItem(`messages_${code}`);
+    const storedGuesses = localStorage.getItem(`guesses_${code}`);
+    if (storedMessages) setMessages(JSON.parse(storedMessages));
+    if (storedGuesses) setGuesses(JSON.parse(storedGuesses));
+  }, [code]);
 
   useEffect(() => {
     if (code) {
@@ -48,21 +63,83 @@ const gamePage = ({ params }) => {
         setMessages((prevMessages) => [...prevMessages, message]);
       });
 
+      socket.on("guessMessage", (guess) => {
+        console.log("Guess received:", guess);
+        setGuesses((prevGuesses) => [...prevGuesses, guess]);
+      });
+
       return () => {
         socket.emit("leaveRoom", code);
         socket.off("chatMessage");
+        socket.off("guessMessage");
       };
     }
   }, [code]);
 
+  useEffect(() => {
+    if (allTopics.length > 0) {
+      const flattenedTopics = allTopics.flat();
+      console.log("Flattened topics:", flattenedTopics);
+      const randomIndex = Math.floor(Math.random() * flattenedTopics.length);
+      const randomTopic = flattenedTopics[randomIndex];
+
+      const randomTopicIndex = Math.floor(Math.random() * randomTopic.length);
+      const topic = randomTopic[randomTopicIndex];
+      console.log("Random topic selected:", topic);
+      setFinalTopic(topic);
+    }
+  }, [allTopics]);
+
   const handleSendMessage = (message) => {
     console.log("Message sent:", message);
-    socket.emit("chatMessage", code, {user: user.username, message});
+    socket.emit("chatMessage", code, { user: user.username, message });
+    setMessages((prevMessages) => {
+      const updatedMessages = [
+        ...prevMessages,
+        { user: user.username, message },
+      ];
+      localStorage.setItem(`messages_${code}`, JSON.stringify(updatedMessages));
+      return updatedMessages;
+    });
   };
-    
+
+  const handleSendGuess = (guess) => {
+    console.log("Guess sent:", guess);
+    socket.emit("guessMessage", code, { user: user.username, message: guess });
+    setGuesses((prevGuesses) => {
+      const updatedGuesses = [
+        ...prevGuesses,
+        { user: user.username, message: guess },
+      ];
+      localStorage.setItem(`guesses_${code}`, JSON.stringify(updatedGuesses));
+      return updatedGuesses;
+    });
+  };
+
+  const handleTopicSelection = (label) => {
+    setSelectedTopics((prevSelected) => {
+      const updatedTopics = prevSelected.includes(label)
+        ? prevSelected.filter((topic) => topic !== label)
+        : prevSelected.length < 3
+        ? [...prevSelected, label]
+        : [...prevSelected.slice(1), label];
+
+      console.log("Updated selected topics:", updatedTopics);
+      return updatedTopics;
+    });
+  };
+
+  const handleFinalTopicSelection = () => {
+    setAllTopics((prevTopics) => {
+      const updatedTopics = [...prevTopics, selectedTopics];
+      console.log("All topics after selection:", updatedTopics);
+      return updatedTopics;
+    });
+    setShowTopic(false);
+    setShowRoulette(true);
+  };
 
   const playerInfo = [{ name: user?.username, profilePicture: "Male2" }];
-  const gameTopic = [{ topic: "Felsefe" }];
   const handleLeaveClick = () => {};
 
   const players = [
@@ -92,8 +169,14 @@ const gamePage = ({ params }) => {
                 <PlayersList players={players} />
               </div>
               <div className="w-3/5 flex flex-col">
-                <CountdownTimer initialTime={105} />
-                <TopicBox topics={topics} />
+                <CountdownTimer
+                  initialTime={30}
+                  onComplete={handleFinalTopicSelection}
+                />
+                <TopicBox
+                  topics={topics}
+                  onSelectTopic={handleTopicSelection}
+                />
               </div>
               <div className="w-1/5 ">
                 <ChatBox
@@ -114,8 +197,7 @@ const gamePage = ({ params }) => {
                 <PlayersList players={players} />
               </div>
               <div className="w-3/5 flex flex-col">
-                <CountdownTimer initialTime={15} />
-                <Roulette gameTopic={gameTopic} />
+                <Roulette allTopics={allTopics} finalTopic={finalTopic} />
               </div>
               <div className="w-1/5 ">
                 <ChatBox
@@ -144,7 +226,7 @@ const gamePage = ({ params }) => {
                 </div>
                 <div className="bg-darkest-orange absolute rounded-full flex justify-center items-center bottom-28">
                   <h2 className="font-bold flex justify-center items-center text-background-white text-4xl font-medium pl-8 pr-8 p-2">
-                    {gameTopic[0].topic}
+                    {finalTopic}
                   </h2>
                 </div>
                 <div
@@ -188,7 +270,8 @@ const gamePage = ({ params }) => {
                 </div>
                 <GuessBox
                   playerInfo={playerInfo}
-                  onSendMessage={handleSendMessage}
+                  onSendGuess={handleSendGuess}
+                  guesses={guesses}
                 />
               </div>
               <div className="w-1/5 ">
@@ -231,7 +314,8 @@ const gamePage = ({ params }) => {
                 </div>
                 <GuessBox
                   playerInfo={playerInfo}
-                  onSendMessage={handleSendMessage}
+                  onSendGuess={handleSendGuess}
+                  guesses={guesses}
                 />
               </div>
               <div className="w-1/5 ">
@@ -256,7 +340,8 @@ const gamePage = ({ params }) => {
                 <CountdownTimer initialTime={105} />
                 <GuessBox
                   playerInfo={playerInfo}
-                  onSendMessage={handleSendMessage}
+                  onSendGuess={handleSendGuess}
+                  guesses={guesses}
                 />
               </div>
               <div className="w-1/5 ">
@@ -281,7 +366,8 @@ const gamePage = ({ params }) => {
                 <CountdownTimer initialTime={105} />
                 <GuessBox
                   playerInfo={playerInfo}
-                  onSendMessage={handleSendMessage}
+                  onSendGuess={handleSendGuess}
+                  guesses={guesses}
                 />
               </div>
               <div className="w-1/5 ">

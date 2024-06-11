@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 
-const CountdownTimer = ({ initialTime}) => {
+const CountdownTimer = ({ initialTime, onComplete}) => {
     const [timeLeft, setTimeLeft] = useState(initialTime);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setTimeLeft(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
+            setTimeLeft(prevTime => {
+                if (prevTime > 0) {
+                    return prevTime - 1;
+                } else {
+                    clearInterval(interval);
+                    if (onComplete) onComplete(); // Zaman dolduğunda onComplete işlevini çağır
+                    return 0;
+                }
+            });
         }, 1000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [initialTime, onComplete]);
 
     const radius = 26;
     const circumference = 2 * Math.PI * radius;

@@ -42,8 +42,7 @@ export default function MainPage() {
     </div>
   );
 } */
-
-  "use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { socket } from "../socket";
