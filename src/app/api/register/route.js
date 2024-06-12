@@ -13,13 +13,12 @@ const schema = Joi.object({
   password: Joi.string().min(6).required(),
   age: Joi.number().required(),
   gender: Joi.string().required(),
-  profileImage: Joi.string().required(),
 });
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req) {
-  // Connect to the databasea
+  // Connect to the database
   await connectToDB();
 
   // Parse the incoming request body
@@ -59,7 +58,6 @@ export async function POST(req) {
         age,
         gender,
         elo: 1000, // Default ELO score for new users
-        profileImage: " ", // Default profile image
       });
 
       const token = jwt.sign({ email: newlyCreatedUser.email, _id: newlyCreatedUser._id },"defaultSecretKey",{ expiresIn: "1D" }

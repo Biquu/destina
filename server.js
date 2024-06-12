@@ -9,6 +9,7 @@ const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
 const roomParticipants = {};
+const roomNarratorIndex = {}; // To track the current narrator index for each room
 
 app.prepare().then(() => {
   const httpServer = createServer(handler);
@@ -21,6 +22,7 @@ app.prepare().then(() => {
       socket.join(roomCode);
       if (!roomParticipants[roomCode]) {
         roomParticipants[roomCode] = [];
+        roomNarratorIndex[roomCode] = 0; // Initialize the narrator index
       }
       roomParticipants[roomCode].push(user);
       io.to(roomCode).emit('participants', roomParticipants[roomCode]);
@@ -39,17 +41,18 @@ app.prepare().then(() => {
     socket.on('startGame', (roomCode) => {
       const participants = roomParticipants[roomCode];
       if (participants && participants.length > 1) {
-        const roles = {};
-        participants.forEach((participant, index) => {
-          roles[participant.username] = index % 2 === 0 ? "narrator" : "listener";
-        });
+        const roles = assignRoles(roomCode, participants);
         io.to(roomCode).emit('assignRoles', roles);
         io.to(roomCode).emit('startGame', participants);
       }
     });
 
-    socket.on('assignRoles', (roomCode, roles) => {
-      io.to(roomCode).emit('assignRoles', roles);
+    socket.on('assignRoles', (roomCode) => {
+      const participants = roomParticipants[roomCode];
+      if (participants && participants.length > 1) {
+        const roles = assignRoles(roomCode, participants);
+        io.to(roomCode).emit('assignRoles', roles);
+      }
     });
 
     socket.on('chatMessage', (roomCode, messageData) => {
@@ -68,6 +71,16 @@ app.prepare().then(() => {
       console.log('Client disconnected');
     });
   });
+
+  const assignRoles = (roomCode, participants) => {
+    const roles = {};
+    const narratorIndex = roomNarratorIndex[roomCode];
+    participants.forEach((participant, index) => {
+      roles[participant.username] = index === narratorIndex ? "narrator" : "listener";
+    });
+    roomNarratorIndex[roomCode] = (narratorIndex + 1) % participants.length;
+    return roles;
+  };
 
   httpServer.listen(port, () => {
     console.log(`> Ready on http://${hostname}:${port}`);

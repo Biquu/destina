@@ -3,44 +3,41 @@ import Game from "@/models/game";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 
-
-
 // Define the schema for the request body
-
 const schema = Joi.object({
     userId: Joi.string().required(),
     username: Joi.string().required(),
-    duration: Joi.number().required().integer().min(1).required(),
-    capacity: Joi.number().required().integer().min(1).required(),
+    profileImage: Joi.string().required(),
+    duration: Joi.number().required().integer().min(1),
+    capacity: Joi.number().required().integer().min(1),
     code: Joi.string().required(),
 });
 
-
-export async function POST(req){
-
+export async function POST(req) {
     await connectToDB();
 
     // Parse the incoming request body
-    const {userId, username, duration, capacity, code} = await req.json();
+    const { userId, username, profileImage, duration, capacity, code } = await req.json();
 
     // Validate the request body against the schema
-    const {error} = schema.validate({userId, username, duration, capacity, code});
+    const { error } = schema.validate({ userId, username, profileImage, duration, capacity, code });
 
-    if(error){
+    if (error) {
         return NextResponse.json({
             success: false,
             message: error.details[0].message,
         });
     }
 
-    try{
+    try {
         const game = new Game({
             userId,
             username,
+            profileImage,
             duration,
             capacity,
             code,
-            participants: [{participant: userId, username: username, sessionScore: 0}],
+            participants: [{ participant: userId, username: username, profileImage: profileImage, sessionScore: 0 }],
         });
 
         await game.save();
@@ -50,14 +47,11 @@ export async function POST(req){
             message: "Game created successfully!",
             data: game,
         });
-    } catch (error){
+    } catch (error) {
         console.log(error);
         return NextResponse.json({
             success: false,
             message: "An error occurred while creating the game!",
         });
     }
-
-
 }
-    

@@ -22,9 +22,9 @@ const gamePage = ({ params }) => {
   const router = useRouter();
   const { code } = params;
   const [game, setGame] = useState(null);
-  const [showTopic, setShowTopic] = useState(false);
+  const [showTopic, setShowTopic] = useState(true);
   const [showRoulette, setShowRoulette] = useState(false);
-  const [showResearch, setShowResearch] = useState(true);
+  const [showResearch, setShowResearch] = useState(false);
   const [showWaitForTeller, setShowWaitForTeller] = useState(false);
   const [showTellerChoosing, setShowTellerChoosing] = useState(false);
   const [showGuess, setShowGuess] = useState(false);
@@ -37,19 +37,18 @@ const gamePage = ({ params }) => {
   const [finalTopic, setFinalTopic] = useState(null);
   const [roles, setRoles] = useState({});
   const [participants, setParticipants] = useState([]);
+  const [userRole, setUserRole] = useState("");
 
-  const { user  } = useContext(GlobalContext);
+  const { user } = useContext(GlobalContext);
 
   useEffect(() => {
     const fetchGame = async () => {
       const gameData = await fetchGameByCode(code);
-      
       setGame(gameData);
       setParticipants(gameData.participants);
     };
     fetchGame();
   }, [code]);
-
 
   // Load messages from session storage
   useEffect(() => {
@@ -61,24 +60,13 @@ const gamePage = ({ params }) => {
 
   useEffect(() => {
     if (code) {
-      fetch(`/api/game/${code}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setGame(data);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      socket.emit("joinRoom", code);
+      socket.emit("joinRoom", code, user);
 
       socket.on("chatMessage", (message) => {
-        console.log("Message received:", message);
         setMessages((prevMessages) => [...prevMessages, message]);
       });
 
       socket.on("guessMessage", (guess) => {
-        console.log("Guess received:", guess);
         setGuesses((prevGuesses) => [...prevGuesses, guess]);
       });
 
@@ -86,41 +74,34 @@ const gamePage = ({ params }) => {
         setParticipants(participants);
       });
 
-      socket.on("assignRoles", (participants) => {
-        const roles = {};
-        participants.forEach((participant, index) => {
-          roles[participant] = index % 2 === 0 ? "narrator" : "listener";
-        });
+      socket.on("assignRoles", (roles) => {
         setRoles(roles);
-        setShowTopic(true);
+        const role = roles[user.username];
+        setUserRole(role);
+        console.log("Assigned roles:", roles);
+        console.log("User role:", role);
       });
 
       return () => {
-        socket.emit("leaveRoom", code);
+        socket.emit("leaveRoom", code, user);
         socket.off("chatMessage");
         socket.off("guessMessage");
         socket.off("participants");
         socket.off("assignRoles");
       };
     }
-  }, [code]);
+  }, [code, user]);
 
   useEffect(() => {
     if (allTopics.length > 0) {
       const flattenedTopics = allTopics.flat();
-      console.log("Flattened topics:", flattenedTopics);
       const randomIndex = Math.floor(Math.random() * flattenedTopics.length);
       const randomTopic = flattenedTopics[randomIndex];
-
-      const randomTopicIndex = Math.floor(Math.random() * randomTopic.length);
-      const topic = randomTopic[randomTopicIndex];
-      console.log("Random topic selected:", topic);
-      setFinalTopic(topic);
+      setFinalTopic(randomTopic);
     }
   }, [allTopics]);
 
   const handleSendMessage = (message) => {
-    console.log("Message sent:", message);
     socket.emit("chatMessage", code, { user: user.username, message });
     setMessages((prevMessages) => {
       const updatedMessages = [
@@ -133,7 +114,6 @@ const gamePage = ({ params }) => {
   };
 
   const handleSendGuess = (guess) => {
-    console.log("Guess sent:", guess);
     socket.emit("guessMessage", code, { user: user.username, message: guess });
     setGuesses((prevGuesses) => {
       const updatedGuesses = [
@@ -152,83 +132,62 @@ const gamePage = ({ params }) => {
         : prevSelected.length < 3
         ? [...prevSelected, label]
         : [...prevSelected.slice(1), label];
-
-      console.log("Updated selected topics:", updatedTopics);
       return updatedTopics;
     });
   };
 
   const handleFinalTopicSelection = () => {
-    setAllTopics((prevTopics) => {
-      const updatedTopics = [...prevTopics, selectedTopics];
-      console.log("All topics after selection:", updatedTopics);
-      return updatedTopics;
-    });
+    setAllTopics((prevTopics) => [...prevTopics, selectedTopics]);
     setShowTopic(false);
     setShowRoulette(true);
   };
 
   const handleCompleteRoulette = () => {
+    console.log("Roulette completed");
     setShowRoulette(false);
     setShowResearch(true);
   };
 
   const handleCompleteResearch = () => {
-     assignRoles();
-    setShowResearch(false);
+    console.log("Research completed");
+    socket.emit("assignRoles", code);
 
-    if (roles[user.username] === "narrator") {
+    const role = roles[user.username];
+    console.log("User role:", role);
+    if (role === "narrator") {
       setShowTellerChoosing(true);
     } else {
       setShowWaitForTeller(true);
     }
+    setShowResearch(false);
   };
 
   const handleCompleteWaitForTeller = () => {
+    console.log("Wait for teller completed");
     setShowWaitForTeller(false);
     setShowTellerChoosing(true);
   };
 
   const handleCompleteTellerChoosing = () => {
+    console.log("Teller choosing completed");
     setShowTellerChoosing(false);
     setShowGuess(true);
   };
 
   const handleCompleteGuess = () => {
+    console.log("Guessing completed");
     setShowGuess(false);
     setShowTell(true);
   };
 
   const handleCompleteTell = () => {
+    console.log("Telling completed");
     setShowTell(false);
     // Move to the next round or show final scores
   };
 
-  const assignRoles = () => {
-    console.log("Assigning roles...");
-    console.log("Participants:", participants);
-    const newRoles = {};
-    participants.forEach((participant, index) => {
-      if (index % 2 === 0) {
-        newRoles[participant.username] = "narrator";
-      } else {
-        newRoles[participant.username] = "listener";
-      }
-    });
-    setRoles(newRoles);
-    socket.emit("assignRoles", newRoles);
-    console.log("Roles assigned:", newRoles);
-  };
-
   const playerInfo = [{ name: user?.username, profilePicture: "Male2" }];
   const handleLeaveClick = () => {};
-
-  const players = [
-    { name: "Helen", profilePicture: "Female1", score: "35", speaker: 0 },
-    { name: "Lila", profilePicture: "Female2", score: "18", speaker: 0 },
-    { name: "Joe", profilePicture: "Male1", score: "14", speaker: 0 },
-    { name: "Michael", profilePicture: "Male2", score: "10", speaker: 0 },
-  ];
 
   const topics = [
     { src: topicAssets.Sanat, label: "Sanat" },
@@ -247,11 +206,11 @@ const gamePage = ({ params }) => {
           <div>
             <div className="flex flex-grow w-full mt-4 h-[85vh]">
               <div className="w-1/5">
-                <PlayersList players={players} />
+                <PlayersList players={participants} />
               </div>
               <div className="w-3/5 flex flex-col">
                 <CountdownTimer
-                  initialTime={30}
+                  initialTime={6}
                   onComplete={handleFinalTopicSelection}
                 />
                 <TopicBox
@@ -275,10 +234,14 @@ const gamePage = ({ params }) => {
           <div>
             <div className="flex flex-grow w-full mt-4 h-[85vh]">
               <div className="w-1/5">
-                <PlayersList players={players} />
+                <PlayersList players={participants} />
               </div>
               <div className="w-3/5 flex flex-col">
-                <Roulette allTopics={allTopics} finalTopic={finalTopic} onComplete={handleCompleteRoulette} />
+                <CountdownTimer
+                  initialTime={10}
+                  onComplete={handleCompleteRoulette}
+                />
+                <Roulette allTopics={allTopics} finalTopic={finalTopic} />
               </div>
               <div className="w-1/5 ">
                 <ChatBox
@@ -296,14 +259,17 @@ const gamePage = ({ params }) => {
           <div>
             <div className="flex flex-grow w-full mt-4 h-[85vh]">
               <div className="w-1/5">
-                <PlayersList players={players} />
+                <PlayersList players={participants} />
               </div>
               <div className="w-3/5 flex flex-col justify-center items-center">
                 <div className="mb-40">
                   <h2 className="font-bold m-4 flex justify-center items-center text-dark-blue text-2xl font-medium mb-2">
                     Araştırma Zamanı
                   </h2>
-                  <CountdownTimerBig initialTime={10} onComplete={handleCompleteResearch} />
+                  <CountdownTimerBig
+                    initialTime={10}
+                    onComplete={handleCompleteResearch}
+                  />
                 </div>
                 <div className="bg-darkest-orange absolute rounded-full flex justify-center items-center bottom-28">
                   <h2 className="font-bold flex justify-center items-center text-background-white text-4xl font-medium pl-8 pr-8 p-2">
@@ -334,17 +300,20 @@ const gamePage = ({ params }) => {
           </div>
         </>
       )}
-      {showWaitForTeller && (
+      {userRole !== "narrator" && showWaitForTeller && (
         <>
           <Header playerInfo={playerInfo} className="z-20" />
           <div>
             <div className="flex flex-grow w-full mt-4 h-[85vh]">
               <div className="w-1/5">
-                <PlayersList players={players} />
+                <PlayersList players={participants} />
               </div>
               <div className="w-3/5 flex flex-col justify-center items-center">
                 <div className="mt-20 mb-5 flex flex-col justify-center items-center">
-                  <CountdownTimerBig initialTime={30} onComplete={handleCompleteWaitForTeller} />
+                  <CountdownTimerBig
+                    initialTime={10}
+                    onComplete={handleCompleteWaitForTeller}
+                  />
                   <h2 className="w-[70%]  font-bold m-4 flex justify-center items-center text-center text-blue text-2xl font-medium mb-2">
                     Arkadaşın Ne Anlatacağına Karar Veriyor...
                   </h2>
@@ -371,10 +340,13 @@ const gamePage = ({ params }) => {
           <div>
             <div className="flex flex-grow w-full mt-4 h-[85vh]">
               <div className="w-1/5">
-                <PlayersList players={players} />
+                <PlayersList players={participants} />
               </div>
               <div className="w-3/5 flex flex-col">
-                <CountdownTimer initialTime={30} onComplete={handleCompleteTellerChoosing} />
+                <CountdownTimer
+                  initialTime={10}
+                  onComplete={handleCompleteTellerChoosing}
+                />
                 <div className="mt-10 mb-5 flex flex-col justify-center items-center  ">
                   <Image
                     src={imageAssets.Microphone}
@@ -409,16 +381,19 @@ const gamePage = ({ params }) => {
           </div>
         </>
       )}
-      {showGuess && (
+      {userRole !== "narrator" && showGuess && (
         <>
           <Header playerInfo={playerInfo} className="z-20" />
           <div>
             <div className="flex flex-grow w-full mt-4 h-[85vh]">
               <div className="w-1/5">
-                <PlayersList players={players} />
+                <PlayersList players={participants} />
               </div>
               <div className="w-3/5 flex flex-col">
-                <CountdownTimer initialTime={105} onComplete={handleCompleteGuess} />
+                <CountdownTimer
+                  initialTime={10}
+                  onComplete={handleCompleteGuess}
+                />
                 <GuessBox
                   playerInfo={playerInfo}
                   onSendGuess={handleSendGuess}
@@ -441,10 +416,13 @@ const gamePage = ({ params }) => {
           <div>
             <div className="flex flex-grow w-full mt-4 h-[85vh]">
               <div className="w-1/5">
-                <PlayersList players={players} />
+                <PlayersList players={participants} />
               </div>
               <div className="w-3/5 flex flex-col">
-                <CountdownTimer initialTime={105} onComplete={handleCompleteTell} />
+                <CountdownTimer
+                  initialTime={10}
+                  onComplete={handleCompleteTell}
+                />
                 <GuessBox
                   playerInfo={playerInfo}
                   onSendGuess={handleSendGuess}

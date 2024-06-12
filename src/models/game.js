@@ -41,6 +41,11 @@ const gameSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
+      profileImage: {
+        type: String,
+        required: true,
+      },
+
     },
   ],
 });

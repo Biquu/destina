@@ -26,7 +26,7 @@ export default function homePage() {
 
   const { user, participants, setParticipants } = useContext(GlobalContext);
 
-  const playerInfo = [{ name: user?.username, profilePicture: "Male2" }];
+  const playerInfo = [{ name: user?.username, profilePicture: user?.profileImage }];
 
   useEffect(() => {
     socket.on("participants", (updatedParticipants) => {
@@ -34,22 +34,15 @@ export default function homePage() {
       console.log("Participants updated: ", updatedParticipants);
     });
 
-    socket.on("startGame", (participants) => {
-      assignRoles(participants);
-    });
-
-    socket.on("assignRoles", (assignedRoles) => {
-      setRoles(assignedRoles);
-      startGameFlow(assignedRoles);
+    socket.on("startGame", () => {
+      router.push(`/game/${gameCode}`);
     });
 
     return () => {
       socket.off("participants");
       socket.off("startGame");
-      socket.off("assignRoles");
     };
-  }, []);
-  
+  }, [gameCode, router, setParticipants]);
 
   const handlePlayRandom = () => {
     setShowGames(true);
@@ -80,6 +73,7 @@ export default function homePage() {
   };
 
   const handleCreateGame = () => {
+    socket.emit("startGame", gameCode);
     router.push(`/game/${gameCode}`);
   };
 
@@ -99,6 +93,7 @@ export default function homePage() {
       userId: user?._id,
       username: user?.username,
       code: roomCode,
+      profileImage: user?.profileImage,
     };
 
     try {
@@ -121,6 +116,7 @@ export default function homePage() {
       userId: user?._id,
       username: user?.username,
       code: nanoid(6),
+      profileImage: user?.profileImage,
     };
     switch (selectedGame) {
       case 1:
@@ -142,6 +138,7 @@ export default function homePage() {
 
     try {
       const data = await createGame(gameData);
+      console.log("Create game data: ", data);
       if (data.success) {
         setIsCreator(true);
         setParticipants(data.data.participants);

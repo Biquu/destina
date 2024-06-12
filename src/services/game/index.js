@@ -1,6 +1,7 @@
 export const createGame = async ({
   userId,
   username,
+  profileImage,
   duration,
   capacity,
   code,
@@ -10,19 +11,19 @@ export const createGame = async ({
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ userId, username, duration, capacity, code }),
+    body: JSON.stringify({ userId, username, profileImage, duration, capacity, code }),
   });
   const data = await res.json();
   return data;
 };
 
-export const joinGame = async ({ userId, username, code }) => {
+export const joinGame = async ({ userId, username, profileImage, code }) => {
   const res = await fetch("/api/game/join", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ userId, username, code }),
+    body: JSON.stringify({ userId, username, profileImage, code }),
   });
   const data = await res.json();
   return data;

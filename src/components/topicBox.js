@@ -10,7 +10,7 @@ const TopicBox = ({ topics, onSelectTopic }) => {
       onSelectTopic(selectedTopics);
       console.log("Bura çalıştı: ", selectedTopics);
 
-    }, 29500); // 30 seconds timer for selecting topics
+    }, 5000); // 30 seconds timer for selecting topics
 
     return () => clearTimeout(timer);
   }, [selectedTopics]);
