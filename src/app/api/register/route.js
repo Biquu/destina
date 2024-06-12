@@ -3,6 +3,8 @@ import User from "@/models/user";
 import Joi from "joi";
 import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
+import jwt from "jsonwebtoken";
+
 
 // Schema for validating the incoming request
 const schema = Joi.object({
@@ -60,11 +62,31 @@ export async function POST(req) {
         profileImage: " ", // Default profile image
       });
 
+      const token = jwt.sign({ email: newlyCreatedUser.email, _id: newlyCreatedUser._id },"defaultSecretKey",{ expiresIn: "1D" }
+      );
+
+      const finalData = {
+        token,
+        user: {
+          email: newlyCreatedUser.email,
+          username: newlyCreatedUser.username,
+          _id: newlyCreatedUser._id,
+          elo: newlyCreatedUser.elo,
+          profileImage: newlyCreatedUser.profileImage,
+          interests: newlyCreatedUser.interests,
+          registrationDate: newlyCreatedUser.registrationDate,
+          lastLoginDate: newlyCreatedUser.lastLoginDate,
+          age: newlyCreatedUser.age,
+          gender: newlyCreatedUser.gender,
+        }
+      };
+
       if (newlyCreatedUser) {
         // If user creation is successful, return a success response
         return NextResponse.json({
           success: true,
           message: "Registration successful",
+          finalData,
         });
       }
     }

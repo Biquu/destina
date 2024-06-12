@@ -8,6 +8,8 @@ import { imageAssets } from '@/utils';
 import Image from 'next/image';
 import '../styles/main.css';
 import { GlobalContext } from '@/context';
+import Cookies from "js-cookie";
+
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState(
@@ -16,7 +18,7 @@ const RegisterPage = () => {
       return acc;
     }, {})
   );
-  const { isAuthenticated, setIsAuthenticated, user, setUser } = useContext(GlobalContext);
+  const { isAuthenticated, setIsAuthenticated, setUser } = useContext(GlobalContext);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -33,7 +35,13 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await register(formData);
+    console.log(response);
     if (response.success) {
+      //setIsAuthenticated(true);
+      setUser(response?.finalData?.user);
+      Cookies.set("token", response?.finalData?.token);
+      localStorage.setItem("user", JSON.stringify(response.finalData.user));
+
       router.push('/register/profilePictures');
     } else {
       console.log('Registration failed:', response.message);
@@ -44,16 +52,15 @@ const RegisterPage = () => {
     router.push('/login');
   };
 
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   useEffect(() => {
-    if(isAuthenticated) router.push('/home');
+    if (isAuthenticated) router.push('/home');
   }, [isAuthenticated]);
 
-  
+
 
   return (
     <div className="main-page">
@@ -79,17 +86,17 @@ const RegisterPage = () => {
                   <div key={control.id}>
                     <div className="w-full relative content-center">
                       {control.id === 'password' && (
-                        <Image className="absolute mt-4 w-5 right-0 mr-3 cursor-pointer" src={imageAssets.Eye} alt="Eye" onClick={togglePasswordVisibility}/>
+                        <Image className="absolute mt-4 w-5 right-0 mr-3 cursor-pointer" src={imageAssets.Eye} alt="Eye" onClick={togglePasswordVisibility} />
                       )}
-                    <input
-                      type={control.id === 'password' && showPassword ? 'text' : control.type}
-                      name={control.id}
-                      value={formData[control.id]}
-                      onChange={handleChange}
-                      placeholder={control.placeholder}
-                      required
-                      className="mt-1 bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
-                    />
+                      <input
+                        type={control.id === 'password' && showPassword ? 'text' : control.type}
+                        name={control.id}
+                        value={formData[control.id]}
+                        onChange={handleChange}
+                        placeholder={control.placeholder}
+                        required
+                        className="mt-1 outline-darkest-blue  bg-[#E8EFEC] block w-full border border-dark-blue p-2 rounded-[15px] text-blue placeholder:font-medium placeholder:text-blue px-5"
+                      />
                     </div>
                     {control.id === 'gender' && (
                       <p className="w-full max-w-96 text-sm text-blue mt-4 text-center">
