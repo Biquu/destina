@@ -30,7 +30,7 @@ import Elo from '../assets/components/elo.png'
 import Leave from '../assets/components/leave.png'
 import Copy from '../assets/components/copy.png'
 import Voice from '../assets/components/voice.png'
-import Chat from '../assets/components/Chat.png';
+import Chat from '../assets/components/chat.png';
 import Winner from '../assets/components/winner.png';
 import Roulette from '../assets/components/roulette.png';
 import Microphone from '../assets/components/microphone.png';
