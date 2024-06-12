@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Header from "../../components/header";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,9 @@ import { playerImages } from "@/utils";
 import { GlobalContext } from "@/context";
 import { createGame, joinGame } from "@/services/game";
 import { nanoid } from "nanoid";
+import io from "socket.io-client";
 
+const socket = io();
 
 export default function homePage() {
   const router = useRouter();
@@ -18,54 +20,66 @@ export default function homePage() {
   const [showPopupRoom, setShowPopupRoom] = useState(false);
   const [showGames, setShowGames] = useState(false);
   const [selectedGame, setSelectedGame] = useState(1);
-  const [gameCode, setGameCode] = useState(" ");
-  const [roomCode, setRoomCode] = useState(" ");
+  const [gameCode, setGameCode] = useState("");
+  const [roomCode, setRoomCode] = useState("");
+  const [isCreator, setIsCreator] = useState(false);
 
   const { user, participants, setParticipants } = useContext(GlobalContext);
 
+  const playerInfo = [{ name: user?.username, profilePicture: "Male2" }];
+
+  useEffect(() => {
+    socket.on("participants", (updatedParticipants) => {
+      setParticipants(updatedParticipants);
+      console.log("Participants updated: ", updatedParticipants);
+    });
+
+    socket.on("startGame", (participants) => {
+      assignRoles(participants);
+    });
+
+    socket.on("assignRoles", (assignedRoles) => {
+      setRoles(assignedRoles);
+      startGameFlow(assignedRoles);
+    });
+
+    return () => {
+      socket.off("participants");
+      socket.off("startGame");
+      socket.off("assignRoles");
+    };
+  }, []);
   
 
-  const playerInfo = [{ name: user?.username , profilePicture: "Male2" }];
-
-
-  const players = [
-    { name: "Helen", profilePicture: "Female1" },
-    { name: "Lila", profilePicture: "Female2" },
-    { name: "Joe", profilePicture: "Male1" },
-    { name: "Michael", profilePicture: "Male2" },
-  ];
-
   const handlePlayRandom = () => {
-    console.log("Play Random Game");
-    setShowGames(true); // Show the popup when the button is clicked
+    setShowGames(true);
   };
 
   const handleCloseGames = () => {
-    setShowGames(false); // Close the popup
+    setShowGames(false);
   };
 
   const handlePlayWithFriends = () => {
-    setShowPopup(true); // Show the popup when the button is clicked
+    setShowPopup(true);
   };
 
   const handleClosePopup = () => {
-    setShowPopup(false); // Close the popup
+    setShowPopup(false);
   };
 
   const handleJoinRoom = () => {
-    setShowPopupRoom(true); // Show the popup when the button is clicked
+    setShowPopupRoom(true);
   };
 
   const handleClosePopupRoom = () => {
-    setShowPopupRoom(false); // Close the popup
+    setShowPopupRoom(false);
   };
 
   const handleLeaveClick = () => {
-    setShowPopupRoom(false); // Close the popup
+    setShowPopupRoom(false);
   };
 
   const handleCreateGame = () => {
-   
     router.push(`/game/${gameCode}`);
   };
 
@@ -81,7 +95,6 @@ export default function homePage() {
   };
 
   const handleJoinFriend = async () => {
-
     let joinData = {
       userId: user?._id,
       username: user?.username,
@@ -90,27 +103,20 @@ export default function homePage() {
 
     try {
       const data = await joinGame(joinData);
-      console.log(joinData);
-      console.log(data);
-      console.log(data.data.participants);
       if (data.success) {
-        console.log("Joined game successfully");
-        setParticipants(data.data.participants);
+        setParticipants(data.game.participants);
+        setGameCode(roomCode); // Set gameCode when joining a new room
+        socket.emit("joinRoom", roomCode, user);
         handleJoinRoom();
       } else {
         console.log("Failed to join game");
       }
-    } catch (error) { 
+    } catch (error) {
       console.error("Failed to join game: ", error);
     }
-
   };
-  
-  
 
   const handleCreateRoom = async () => {
-    
-    
     let gameData = {
       userId: user?._id,
       username: user?.username,
@@ -135,13 +141,11 @@ export default function homePage() {
     setGameCode(gameData.code);
 
     try {
-      const data = await createGame(gameData);     
-     
-      console.log(data.data.participants[0].name);
+      const data = await createGame(gameData);
       if (data.success) {
-        console.log("Game created successfully");
+        setIsCreator(true);
         setParticipants(data.data.participants);
-        console.log(participants)
+        socket.emit("joinRoom", gameData.code, user);
         handleClosePopup();
       } else {
         console.log("Failed to create game");
@@ -193,7 +197,7 @@ export default function homePage() {
                     }`}
                     onClick={() => setSelectedGame(1)}
                   >
-                    <h1 className="flex justify-center text-background-white text-xl font-normal  pl-3 tracking-tight leading-none">
+                    <h1 className="flex justify-center text-background-white text-xl font-normal pl-3 tracking-tight leading-none">
                       3 Kişi 10 dk.
                     </h1>
                   </div>
@@ -205,31 +209,31 @@ export default function homePage() {
                     }`}
                     onClick={() => setSelectedGame(2)}
                   >
-                    <h1 className="flex justify-center text-background-white text-xl font-normal  pl-3 tracking-tight leading-none">
+                    <h1 className="flex justify-center text-background-white text-xl font-normal pl-3 tracking-tight leading-none">
                       4 Kişi 20 dk.
                     </h1>
                   </div>
                   <div
-                    className={`bg-dark-orange flex justify-center items-center  rounded-full w-[75px] h-[75px] absolute bottom-[240px] left-[60px] shadow-lg hover:shadow-orange/50  ${
+                    className={`bg-dark-orange flex justify-center items-center rounded-full w-[75px] h-[75px] absolute bottom-[240px] left-[60px] shadow-lg hover:shadow-orange/50 ${
                       selectedGame === 3
                         ? "opacity-100 shadow-orange"
                         : "opacity-30"
                     }`}
                     onClick={() => setSelectedGame(3)}
                   >
-                    <h1 className="flex justify-center text-background-white text-xl font-normal  pl-3 tracking-tight leading-none">
+                    <h1 className="flex justify-center text-background-white text-xl font-normal pl-3 tracking-tight leading-none">
                       4 Kişi 25 dk.
                     </h1>
                   </div>
                   <div
-                    className={`bg-darkest-orange flex justify-center items-center  rounded-full w-[75px] h-[75px] absolute bottom-[200px] left-[205px] shadow-lg hover:shadow-orange/50  ${
+                    className={`bg-darkest-orange flex justify-center items-center rounded-full w-[75px] h-[75px] absolute bottom-[200px] left-[205px] shadow-lg hover:shadow-orange/50 ${
                       selectedGame === 4
                         ? "opacity-100 shadow-orange"
                         : "opacity-30"
                     }`}
                     onClick={() => setSelectedGame(4)}
                   >
-                    <h1 className="flex justify-center text-background-white text-xl font-normal  pl-3 tracking-tight leading-none">
+                    <h1 className="flex justify-center text-background-white text-xl font-normal pl-3 tracking-tight leading-none">
                       5 Kişi 35 dk.
                     </h1>
                   </div>
@@ -265,9 +269,9 @@ export default function homePage() {
             className="fixed inset-0 bg-background-white bg-opacity-55 flex justify-center items-center"
             onClick={handleClosePopup}
           ></div>
-          <div className="bg-white fixed flex p-8 rounded-[90px] shadow-lg w-[900px] h-[550px] absolute  justify-between flex-row">
+          <div className="bg-white fixed flex p-8 rounded-[90px] shadow-lg w-[900px] h-[550px] absolute justify-between flex-row">
             <div className="flex flex-col space-y-4 w-[45%]">
-              <h3 className="flex justify-center text-blue text-xl font-medium  mb-2">
+              <h3 className="flex justify-center text-blue text-xl font-medium mb-2">
                 Odaya Katıl
               </h3>
               <input
@@ -282,8 +286,9 @@ export default function homePage() {
                 className="w-full"
                 type="submit"
                 onClick={() => {
-                  handleJoinFriend();
+                  handleJoinRoom();
                   handleClosePopup();
+                  handleJoinFriend();
                 }}
               >
                 KATIL
@@ -291,12 +296,12 @@ export default function homePage() {
             </div>
             <div className="border border-dark-blue h-[450px] w-0"></div>
             <div className="flex flex-col space-y-4 w-[45%]">
-              <h3 className="flex justify-center text-blue text-xl font-medium  mb-2">
+              <h3 className="flex justify-center text-blue text-xl font-medium mb-2">
                 Oda Oluştur
               </h3>
-              <div className="fixed relative  flex fle-col mb-10">
+              <div className="fixed relative flex fle-col mb-10">
                 <div
-                  className={`bg-orange flex justify-center items-center rounded-full w-[75px] h-[75px] shadow-lg hover:shadow-orange/50  ${
+                  className={`bg-orange flex justify-center items-center rounded-full w-[75px] h-[75px] shadow-lg hover:shadow-orange/50 ${
                     selectedGame === 1
                       ? "opacity-100 shadow-orange"
                       : "opacity-30"
@@ -308,7 +313,7 @@ export default function homePage() {
                   </h1>
                 </div>
                 <div
-                  className={`bg-dark-orange flex justify-center items-center rounded-full w-[75px] h-[75px] shadow-lg hover:shadow-orange/50 mt-10  ${
+                  className={`bg-dark-orange flex justify-center items-center rounded-full w-[75px] h-[75px] shadow-lg hover:shadow-orange/50 mt-10 ${
                     selectedGame === 2
                       ? "opacity-100 shadow-orange"
                       : "opacity-30"
@@ -320,7 +325,7 @@ export default function homePage() {
                   </h1>
                 </div>
                 <div
-                  className={`bg-dark-orange flex justify-center items-center  rounded-full w-[75px] h-[75px] shadow-lg hover:shadow-orange/50 ${
+                  className={`bg-dark-orange flex justify-center items-center rounded-full w-[75px] h-[75px] shadow-lg hover:shadow-orange/50 ${
                     selectedGame === 3
                       ? "opacity-100 shadow-orange"
                       : "opacity-30"
@@ -332,7 +337,7 @@ export default function homePage() {
                   </h1>
                 </div>
                 <div
-                  className={`bg-darkest-orange flex justify-center items-center  rounded-full w-[75px] h-[75px] shadow-lg hover:shadow-orange/50 mt-10  ${
+                  className={`bg-darkest-orange flex justify-center items-center rounded-full w-[75px] h-[75px] shadow-lg hover:shadow-orange/50 mt-10 ${
                     selectedGame === 4
                       ? "opacity-100 shadow-orange"
                       : "opacity-30"
@@ -365,7 +370,7 @@ export default function homePage() {
             className="fixed inset-0 bg-background-white bg-opacity-55 flex justify-center items-center"
             onClick={handleClosePopupRoom}
           ></div>
-          <div className="bg-white fixed flex p-8 rounded-[90px] shadow-lg w-[900px] h-[550px] absolute  justify-between flex-col">
+          <div className="bg-white fixed flex p-8 rounded-[90px] shadow-lg w-[900px] h-[550px] absolute justify-between flex-col">
             <div className="space-y-4 w-[100%] relative">
               <h3 className="flex justify-center items-center text-blue text-xl font-medium mb-2">
                 Arkadaşlarınla Oyna
@@ -380,7 +385,7 @@ export default function homePage() {
                 <Image
                   src={imageAssets.Leave}
                   alt="Leave"
-                  className=" w-[20px] pb-2 ml-2"
+                  className="w-[20px] pb-2 ml-2"
                 />
               </div>
             </div>
@@ -409,7 +414,7 @@ export default function homePage() {
                   <Image
                     src={imageAssets.Copy}
                     alt="copy"
-                    className="w-[17px]  ml-2 cursor-pointer "
+                    className="w-[17px] ml-2 cursor-pointer "
                     onClick={handleCopyRoomCode}
                   />
                 </div>
@@ -418,16 +423,15 @@ export default function homePage() {
                 </h3>
               </div>
             </div>
-            <div className="space-y-4 w-[100%]  flex  justify-center">
-              <button
-                className="mt-10 w-[300px] justify-center"
-                type="submit"
-                onClick={() => {
-                  handleCreateGame();
-                }}
-              >
-                OYNA
-              </button>
+            <div className="space-y-4 w-[100%] flex justify-center">
+              {isCreator && (
+                <button
+                  className="w-[200px] h-[50px] bg-orange text-background-white rounded-full shadow-lg"
+                  onClick={handleCreateGame}
+                >
+                  OYUNU BAŞLAT
+                </button>
+              )}
             </div>
           </div>
         </div>
