@@ -14,7 +14,7 @@ export default function homePage() {
   const router = useRouter();
 
 
-  const playerInfo = [{ name: "Michael", profilePicture: "Male2" },]
+  const playerInfo = [{ name: "Michael", profilePicture: "Male5" },]
 
 
   const [formData, setFormData] = useState(

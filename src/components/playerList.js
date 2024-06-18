@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { playerImages } from '@/utils';
 import { imageAssets } from '@/utils';
+import { images } from '@/utils';
 
 const PlayersList = ({ players }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -24,7 +25,7 @@ const PlayersList = ({ players }) => {
                         {players.map((player, index) => (
                             <li key={index} className="flex flex-row items-center mb-2">
                                 <Image
-                                    src={playerImages[player?.profileImage]?.src || '/default-profile.png'} // Fallback to default profile image
+                                    src={images[player?.profileImage]?.src || '/default-profile.png'} // Fallback to default profile image
                                     alt={player?.name || 'Unknown'}
                                     width={40}
                                     height={40}

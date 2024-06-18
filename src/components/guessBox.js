@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { playerImages } from '@/utils';
 import { imageAssets } from '@/utils';
+import { images } from '@/utils';
 
 const GuessBox = ({ playerInfo, onSendGuess, guesses }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -36,7 +37,7 @@ const GuessBox = ({ playerInfo, onSendGuess, guesses }) => {
                         <Image src={imageAssets.ArrowWhite} className="w-4" onClick={handleClick} />
                     </div>
                     <div className='flex flex-row items-center ml-4 mr-4 relative'>
-                        <Image src={playerImages[playerInfo[0].profilePicture]} width={40} height={40} className="rounded-full mr-2" />
+                        <Image src={images[playerInfo?.profileImage]?.src || playerImages['Male5']?.src}  width={40} height={40} className="rounded-full mr-2" />
                         <span className="text-blue text-l font-medium relative">{playerInfo[0].name}</span>
                         <Image src={imageAssets.Voice} width={40} height={40} className="w-4 ml-2" />
                         <div className=' bg-darkest-orange absolute right-0 rounded-full flex justify-center items-center'>
